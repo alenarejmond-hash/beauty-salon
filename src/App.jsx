@@ -38,7 +38,7 @@ function WalletIcon(props) {
   );
 }
 
-const GOOGLE_APPS_SCRIPT_URL = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J5YmFBb0YwZC1PcktYQ0I3WWpxWW1mcVJPeG56ejFLVXlKN0JZNGdIUVhON0owMUJHd09Fc21HV1haZzc1bW9weWp4dy9leGVj'); 
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWGAIKHax3W0f9gHzsDrX2THVtI6IWmlqDozgV1j7KLhcRaNKY5AgvhJgOybQTZyBxyQ/exec'; 
 
 const formatPhone = (val) => {
   let v = val.replace(/\D/g, '');
