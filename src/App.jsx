@@ -39,8 +39,8 @@ function WalletIcon(props) {
 }
 
 // URL обфусцирован (зашифрован в base64) для защиты от простых парсеров исходного кода.
-// Функция atob() расшифрует его прямо в момент работы приложения.
-const GOOGLE_APPS_SCRIPT_URL = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J6ZHZ1dGptdENOTVpTdEZQX1FCMW1zQzh2THRxUlMwdzM1NUZzMmoxZ25UM19BUC10MFhTSXdzUXdGTnhQVDBDQ3ZYQS9leGVj'); 
+// Функция atob() расшифрует новую ссылку прямо в момент работы приложения.
+const GOOGLE_APPS_SCRIPT_URL = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J4SkVWb2RocncwRF9GdnFMaktYcEpqRmJCZnZLNXpKd1g3NWQ0b3FObXBhMmNFc1doV25xMW56NkhscmRLUDJ6R0JwUS9leGVj'); 
 
 const DICT = {
   hy: {
@@ -601,7 +601,6 @@ export default function App() {
         </button>
       </div>
 
-      {/* HERO SECTION */}
       <header className={`relative pt-20 pb-8 px-5 overflow-hidden flex flex-col items-center text-center rounded-b-[2.5rem] shadow-[0_4px_40px_-15px_rgba(0,0,0,0.05)] w-full transition-colors duration-300 ${t.headerBg}`}>
         <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-48 rounded-[100%] blur-3xl -z-10 transition-colors duration-700 ${t.glow}`} />
         
