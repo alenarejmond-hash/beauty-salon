@@ -39,7 +39,7 @@ function WalletIcon(props) {
 }
 
 // URL обфусцирован (зашифрован в base64) для защиты от простых парсеров исходного кода.
-// Функция atob() расшифрует новую ссылку прямо в момент работы приложения.
+// Ссылка теперь актуальная (из нового развертывания).
 const GOOGLE_APPS_SCRIPT_URL = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J4SkVWb2RocncwRF9GdnFMaktYcEpqRmJCZnZLNXpKd1g3NWQ0b3FObXBhMmNFc1doV25xMW56NkhscmRLUDJ6R0JwUS9leGVj'); 
 
 const DICT = {
@@ -74,16 +74,14 @@ const DICT = {
     copied: "Պատճենված է",
     copyError: "Պատճենման սխալ",
     installHint: 'Սեղմեք "Կիսվել" և ընտրեք "Ավելացնել էկրանին"',
+    loadingSlots: "Ժամանակացույցի բեռնում...",
+    noSlots: "Այս պահին ազատ պատուհաններ չկան կամ վարպետը արձակուրդում է 🌴 Հավաքում եմ ուժեր ձեզ ավելի գեղեցիկ դարձնելու համար: Մոտ օրերս նոր պատուհաններ կավելանան:",
     // Mock Data
     s_manicure: "Մատնահարդարում",
     s_pedicure: "Պեդիկյուր",
     s_design: "Դիզայն և խնամք",
     today: "Այսօր",
     tomorrow: "Վաղը",
-    sep29: "29 Սեպ",
-    sep30: "30 Սեպ",
-    oct1: "1 Հոկտ",
-    oct2: "2 Հոկտ",
     discount: "Զեղչ 10%",
     pol1: "Կանխավճար 2000 AMD ժամանակը ֆիքսելու համար:",
     pol2: "Ավելի քան 15 րոպե ուշացում = գրանցման չեղարկում:",
@@ -121,16 +119,14 @@ const DICT = {
     copied: "Скопировано в буфер!",
     copyError: "Ошибка копирования",
     installHint: 'Нажмите "Поделиться" -> "На экран Домой"',
+    loadingSlots: "Загрузка расписания...",
+    noSlots: "Свободных окон пока нет или мастер в отпуске 🌴 Набираюсь сил, чтобы делать вас еще красивее! Окошки скоро появятся.",
     // Mock Data
     s_manicure: "Маникюр",
     s_pedicure: "Педикюр",
     s_design: "Дизайн & Уход",
     today: "Сегодня",
     tomorrow: "Завтра",
-    sep29: "29 Сен",
-    sep30: "30 Сен",
-    oct1: "1 Окт",
-    oct2: "2 Окт",
     discount: "Скидка 10%",
     pol1: "Предоплата 2000 AMD для фиксации времени.",
     pol2: "Опоздание более 15 минут = отмена записи (предоплата не возвращается).",
@@ -147,12 +143,6 @@ const getMockData = (lang) => ({
     avatar: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80",
     status: DICT[lang].status
   },
-  availableDates: [
-    { id: 1, date: DICT[lang].sep29, label: DICT[lang].today, times: ["15:00", "17:30", "19:00"] },
-    { id: 2, date: DICT[lang].sep30, label: DICT[lang].tomorrow, times: ["10:00", "12:00", "14:30", "16:00"] },
-    { id: 3, date: DICT[lang].oct1, label: "", times: ["11:00", "13:30", "15:00", "18:00"] },
-    { id: 4, date: DICT[lang].oct2, label: "", times: ["09:00", "11:00", "14:00", "17:00", "19:00"] }
-  ],
   services: [
     {
       id: "s1",
@@ -401,13 +391,37 @@ const SectionTitle = ({ title, icon: Icon, t }) => (
   </div>
 );
 
+// Функция для превращения даты из формата "01.10.2026" в "1 Окт" и определения "Сегодня/Завтра"
+const parseSheetDate = (dateStr, lang) => {
+  const [d, m, y] = dateStr.split('.');
+  const dateObj = new Date(y, m - 1, d);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  let label = "";
+  if (dateObj.getTime() === today.getTime()) label = DICT[lang].today;
+  else if (dateObj.getTime() === tomorrow.getTime()) label = DICT[lang].tomorrow;
+
+  const monthsRu = ["Янв", "Фев", "Мар", "Апр", "Мая", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
+  const monthsHy = ["Հնվ", "Փտվ", "Մար", "Ապր", "Մայ", "Հնս", "Հլս", "Օգս", "Սեպ", "Հոկ", "Նոյ", "Դեկ"];
+  const shortDate = `${parseInt(d)} ${lang === 'ru' ? monthsRu[dateObj.getMonth()] : monthsHy[dateObj.getMonth()]}`;
+
+  return { shortDate, label, fullDate: dateStr };
+};
+
 export default function App() {
   const [lang, setLang] = useState('hy'); 
   const d = DICT[lang]; 
   const data = getMockData(lang); 
 
-  const [activeCategory, setActiveCategory] = useState(data.services[0].category);
+  // Состояния для дат из Google Таблицы
+  const [availableDates, setAvailableDates] = useState([]);
+  const [isLoadingDates, setIsLoadingDates] = useState(true);
   const [selectedDateIdx, setSelectedDateIdx] = useState(0); 
+
+  const [activeCategory, setActiveCategory] = useState(data.services[0].category);
   const [toast, setToast] = useState({ visible: false, message: "" });
   const [copiedPaymentId, setCopiedPaymentId] = useState(null);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
@@ -448,6 +462,42 @@ export default function App() {
   useEffect(() => {
     setActiveCategory(data.services[0].category);
   }, [lang]);
+
+  // Запрашиваем актуальные даты из Google Таблицы при загрузке
+  useEffect(() => {
+    const fetchSlots = async () => {
+      setIsLoadingDates(true);
+      try {
+        const res = await fetch(GOOGLE_APPS_SCRIPT_URL);
+        const fetchedData = await res.json();
+        
+        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+          // Преобразуем формат таблицы в формат для UI
+          const parsedDates = fetchedData.map((dayObj, i) => {
+            const parsed = parseSheetDate(dayObj.date, lang);
+            return {
+              id: dayObj.id || i,
+              fullDate: parsed.fullDate, // Важно! "01.10.2026" для отправки обратно
+              shortDate: parsed.shortDate, // "1 Окт" для красоты
+              label: parsed.label, // "Сегодня" / "Завтра"
+              times: dayObj.times // ["9:00", "13:00"]
+            };
+          });
+          setAvailableDates(parsedDates);
+          setSelectedDateIdx(0);
+        } else {
+          setAvailableDates([]);
+        }
+      } catch (error) {
+        console.error("Ошибка при загрузке расписания:", error);
+        setAvailableDates([]); // В случае ошибки показываем плашку про отпуск
+      } finally {
+        setIsLoadingDates(false);
+      }
+    };
+
+    fetchSlots();
+  }, [lang]); // Перезапрашиваем при смене языка, чтобы обновить "Октябрь" / "Հոկտ"
 
   const t = THEMES[theme];
 
@@ -525,11 +575,12 @@ export default function App() {
     e.preventDefault();
     setFormState(prev => ({ ...prev, isSubmitting: true }));
 
+    // Отправляем полную дату "01.10.2026", чтобы скрипт понял её и создал событие в календаре
     const payload = {
       name: formState.name,
       phone: `+374 ${formState.phone.replace(/^\+?374\s*/, '')}`, 
       service: bookingModal.service?.name || d.byAgreement,
-      slot: bookingModal.slot ? `${bookingModal.slot.date} ${bookingModal.slot.time}` : d.willChooseInChat,
+      slot: bookingModal.slot ? `${bookingModal.slot.fullDate} ${bookingModal.slot.time}` : d.willChooseInChat,
       timestamp: new Date().toISOString()
     };
 
@@ -546,6 +597,19 @@ export default function App() {
       }
       
       setFormState(prev => ({ ...prev, isSubmitting: false, isSuccess: true }));
+      
+      // Локально убираем занятое время с экрана до перезагрузки
+      if (bookingModal.slot) {
+         setAvailableDates(prevDates => {
+            const newDates = [...prevDates];
+            const dateObj = newDates.find(day => day.fullDate === bookingModal.slot.fullDate);
+            if (dateObj) {
+               dateObj.times = dateObj.times.filter(t => t !== bookingModal.slot.time);
+            }
+            return newDates.filter(day => day.times.length > 0);
+         });
+      }
+
       setTimeout(closeBooking, 3000);
     } catch (error) {
       setFormState(prev => ({ ...prev, isSubmitting: false }));
@@ -643,39 +707,63 @@ export default function App() {
 
       <main className="px-5 mt-8 w-full max-w-md mx-auto space-y-10 flex-1 relative z-10">
         
+        {}
         <section>
           <SectionTitle title={d.availableSlots} icon={Sparkles} t={t} />
           
-          <div className="flex gap-3 overflow-x-auto pb-4 pt-1 -mx-5 px-5 snap-x scrollbar-hide">
-            {data.availableDates.map((day, idx) => (
-              <button
-                key={day.id}
-                onClick={() => setSelectedDateIdx(idx)}
-                className={`snap-start flex-shrink-0 min-w-[85px] py-3.5 px-4 rounded-2xl flex flex-col items-center justify-center transition-all duration-300 border ${
-                  selectedDateIdx === idx
-                    ? `${t.tabActive} shadow-lg border-transparent scale-105`
-                    : `${t.tabInactive} hover:opacity-80 scale-100`
-                }`}
-              >
-                {day.label && <span className="text-[10px] font-bold uppercase tracking-wider mb-1 opacity-70">{day.label}</span>}
-                <span className={`text-sm font-bold whitespace-nowrap ${!day.label && 'mt-1'}`}>{day.date}</span>
-              </button>
-            ))}
-          </div>
+          {isLoadingDates ? (
+            <div className={`w-full p-8 rounded-3xl border flex flex-col items-center justify-center text-center gap-3 transition-colors duration-300 ${t.cardBg} ${t.cardBorder}`}>
+              <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin opacity-50" style={{ borderColor: THEME_OPTIONS.find(o => o.id === theme).border, borderTopColor: 'transparent' }} />
+              <p className={`text-sm font-medium animate-pulse ${t.cardTextSub}`}>{d.loadingSlots}</p>
+            </div>
+          ) : availableDates.length === 0 ? (
+            <div className={`w-full p-8 rounded-3xl border flex flex-col items-center justify-center text-center gap-4 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} shadow-sm`}>
+              <div className={`w-14 h-14 rounded-full flex items-center justify-center ${t.accentBg} ${t.accentText}`}>
+                <Calendar size={28} />
+              </div>
+              <p className={`text-sm font-medium leading-relaxed ${t.cardTextMain}`}>{d.noSlots}</p>
+            </div>
+          ) : (
+            <>
+              <div className="flex gap-3 overflow-x-auto pb-4 pt-1 -mx-5 px-5 snap-x scrollbar-hide">
+                {availableDates.map((day, idx) => (
+                  <button
+                    key={day.id}
+                    onClick={() => setSelectedDateIdx(idx)}
+                    className={`snap-start flex-shrink-0 min-w-[85px] py-3.5 px-4 rounded-2xl flex flex-col items-center justify-center transition-all duration-300 border ${
+                      selectedDateIdx === idx
+                        ? `${t.tabActive} shadow-lg border-transparent scale-105`
+                        : `${t.tabInactive} hover:opacity-80 scale-100`
+                    }`}
+                  >
+                    {day.label && <span className="text-[10px] font-bold uppercase tracking-wider mb-1 opacity-70">{day.label}</span>}
+                    <span className={`text-sm font-bold whitespace-nowrap ${!day.label && 'mt-1'}`}>{day.shortDate}</span>
+                  </button>
+                ))}
+              </div>
 
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-1 animate-[slideUp_0.3s_ease-out]">
-            {data.availableDates[selectedDateIdx].times.map((time, idx) => (
-              <button
-                key={idx}
-                onClick={() => openBooking(null, { date: data.availableDates[selectedDateIdx].date, time: time })}
-                className={`py-3 rounded-xl font-bold text-base transition-all duration-300 active:scale-95 border ${t.cardBg} ${t.cardBorder} ${t.cardTextMain} hover:border-[currentColor] shadow-sm`}
-              >
-                {time}
-              </button>
-            ))}
-          </div>
+              {availableDates[selectedDateIdx] && (
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-1 animate-[slideUp_0.3s_ease-out]">
+                  {availableDates[selectedDateIdx].times.map((time, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => openBooking(null, { 
+                        fullDate: availableDates[selectedDateIdx].fullDate, 
+                        displayDate: availableDates[selectedDateIdx].shortDate, 
+                        time: time 
+                      })}
+                      className={`py-3 rounded-xl font-bold text-base transition-all duration-300 active:scale-95 border ${t.cardBg} ${t.cardBorder} ${t.cardTextMain} hover:border-[currentColor] shadow-sm`}
+                    >
+                      {time}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </section>
 
+        {}
         <section>
           <SectionTitle title={d.priceList} icon={Star} t={t} />
           
@@ -726,6 +814,7 @@ export default function App() {
           </div>
         </section>
 
+        {}
         <section>
           <SectionTitle title={d.paymentDetails} icon={CreditCard} t={t} />
           <div className={`rounded-3xl p-2 border flex flex-col gap-1 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} ${t.cardShadow}`}>
@@ -755,6 +844,7 @@ export default function App() {
           </div>
         </section>
 
+        {}
         <section>
           <SectionTitle title={d.rules} icon={ShieldAlert} t={t} />
           <div className={`rounded-3xl p-5 border transition-colors duration-300 ${t.policyBg} ${t.cardBorder}`}>
@@ -770,6 +860,7 @@ export default function App() {
         </section>
       </main>
 
+      {}
       <footer className={`mt-12 border-t py-10 px-5 flex flex-col items-center w-full transition-colors duration-300 relative z-10 pb-28 ${t.footerBg} ${t.footerBorder}`}>
         
         <div className="w-full max-w-xs space-y-3 mb-8">
@@ -879,7 +970,7 @@ export default function App() {
                   <div className="flex justify-between items-center">
                     <span className={`text-sm transition-colors duration-300 ${t.cardTextSub}`}>{d.time}</span>
                     <span className={`font-semibold text-right transition-colors duration-300 ${t.cardTextMain}`}>
-                      {bookingModal.slot ? `${bookingModal.slot.date}, ${bookingModal.slot.time}` : d.willChooseInChat}
+                      {bookingModal.slot ? `${bookingModal.slot.displayDate}, ${bookingModal.slot.time}` : d.willChooseInChat}
                     </span>
                   </div>
                 </div>
