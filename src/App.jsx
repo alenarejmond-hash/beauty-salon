@@ -38,7 +38,6 @@ function WalletIcon(props) {
   );
 }
 
-// URL обфусцирован для защиты от простых парсеров.
 const GOOGLE_APPS_SCRIPT_URL = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J4SkVWb2RocncwRF9GdnFMaktYcEpqRmJCZnZLNXpKd1g3NWQ0b3FObXBhMmNFc1doV25xMW56NkhscmRLUDJ6R0JwUS9leGVj'); 
 
 const DICT = {
@@ -62,22 +61,27 @@ const DICT = {
     service: "Ծառայություն",
     time: "Ժամանակ",
     yourName: "Ձեր անունը",
+    namePlaceholder: "Օրինակ՝ Աննա",
     phoneNum: "Հեռախոսահամար",
+    phonePlaceholder: "Օրինակ՝ +374 99 123456",
+    commentLabel: "Մեկնաբանություն (ընտրովի)",
+    commentPlaceholder: "Ցանկություններ, հարցեր...",
+    waCheckbox: "WhatsApp-ը նույն համարով է",
+    waLabel: "WhatsApp Համար",
+    waPlaceholder: "Օրինակ՝ +374 99 123456",
     confirmBooking: "Հաստատել գրանցումը",
     sending: "Ուղարկվում է...",
     successTitle: "Հայտը ուղարկված է!",
     successText: "Շնորհակալություն: Ես կկապվեմ ձեզ հետ շուտով հաստատման համար:",
     byAgreement: "Ըստ համաձայնության",
     willChooseInChat: "Կընտրենք չաթում",
-    namePlaceholder: "Օրինակ՝ Աննա",
     copied: "Պատճենված է",
     copyError: "Պատճենման սխալ",
     installHint: 'Սեղմեք "Կիսվել" և ընտրեք "Ավելացնել էկրանին"',
     loadingSlots: "Համաժամացում...",
     noSlots: "Այս պահին ազատ պատուհաններ չկան կամ վարպետը արձակուրդում է 🌴 Հավաքում եմ ուժեր ձեզ ավելի գեղեցիկ դարձնելու համար: Մոտ օրերս նոր պատուհաններ կավելանան:",
-    upcomingVacation: "Շուտով արձակուրդ է 🌴 Հասցրեք գրանցվել մնացած ազատ օրերին:",
+    upcomingVacation: "Շուտով արձակուրդ է 🌴 Հասցրեք գրանցվել մնացած ազատ օրերին!",
     upcomingVacationDates: (start, end) => `Շուտով արձակուրդ է 🌴 (${start} - ${end}): Հասցրեք գրանցվել վերջին ազատ օրերին!`,
-    // Mock Data
     s_manicure: "Մատնահարդարում",
     s_pedicure: "Պեդիկյուր",
     s_design: "Դիզայն և խնամք",
@@ -109,14 +113,20 @@ const DICT = {
     service: "Услуга",
     time: "Время",
     yourName: "Ваше Имя",
+    namePlaceholder: "Например, Анна",
     phoneNum: "Номер телефона",
+    phonePlaceholder: "Например: +374 99... / +7 900...",
+    commentLabel: "Комментарий (необязательно)",
+    commentPlaceholder: "Особенности, пожелания...",
+    waCheckbox: "WhatsApp на этом же номере",
+    waLabel: "Номер WhatsApp",
+    waPlaceholder: "Например: +374 99... / +7 900...",
     confirmBooking: "Подтвердить запись",
     sending: "Оформляем...",
     successTitle: "Заявка отправлена!",
     successText: "Спасибо! Я свяжусь с вами в ближайшее время для подтверждения записи.",
     byAgreement: "По согласованию",
     willChooseInChat: "Выберем в чате",
-    namePlaceholder: "Например, Анна",
     copied: "Скопировано в буфер!",
     copyError: "Ошибка копирования",
     installHint: 'Нажмите "Поделиться" -> "На экран Домой"',
@@ -124,7 +134,6 @@ const DICT = {
     noSlots: "Свободных окон пока нет или мастер в отпуске 🌴 Набираюсь сил, чтобы делать вас еще красивее! Окошки скоро появятся.",
     upcomingVacation: "Скоро отпуск 🌴 Успейте занять последние свободные окна!",
     upcomingVacationDates: (start, end) => `Скоро отпуск 🌴 (${start} - ${end}). Успейте занять последние окна!`,
-    // Mock Data
     s_manicure: "Маникюр",
     s_pedicure: "Педикюр",
     s_design: "Дизайн & Уход",
@@ -426,7 +435,6 @@ export default function App() {
   const d = DICT[lang]; 
   const data = getMockData(lang); 
 
-  // Храним сырые данные, чтобы не дергать сервер при смене языка
   const [rawDates, setRawDates] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
   const [isLoadingDates, setIsLoadingDates] = useState(true);
@@ -453,6 +461,9 @@ export default function App() {
   const [formState, setFormState] = useState({
     name: "",
     phone: "",
+    whatsapp: "",
+    sameAsPhone: true,
+    comment: "",
     isSubmitting: false,
     isSuccess: false
   });
@@ -474,7 +485,6 @@ export default function App() {
     setActiveCategory(data.services[0].category);
   }, [lang]);
 
-  // СКАЧИВАЕМ ДАННЫЕ ОДИН РАЗ
   useEffect(() => {
     const fetchSlots = async () => {
       setIsLoadingDates(true);
@@ -496,9 +506,8 @@ export default function App() {
     };
 
     fetchSlots();
-  }, []); // Пустой массив зависимостей = загружаем только 1 раз!
+  }, []); 
 
-  // ПЕРЕСОБИРАЕМ ДАТЫ ПРИ СМЕНЕ ЯЗЫКА (Мгновенно)
   useEffect(() => {
     if (rawDates.length > 0) {
       const parsedDates = rawDates
@@ -581,7 +590,7 @@ export default function App() {
 
   const openBooking = (service = null, slot = null) => {
     setBookingModal({ isOpen: true, service, slot });
-    setFormState({ name: "", phone: "", isSubmitting: false, isSuccess: false });
+    setFormState({ name: "", phone: "", whatsapp: "", sameAsPhone: true, comment: "", isSubmitting: false, isSuccess: false });
     document.body.style.overflow = 'hidden';
     document.body.style.touchAction = 'none';
   };
@@ -596,9 +605,17 @@ export default function App() {
     e.preventDefault();
     setFormState(prev => ({ ...prev, isSubmitting: true }));
 
+    const finalPhone = formState.sameAsPhone 
+      ? formState.phone 
+      : `${formState.phone} (WA: ${formState.whatsapp})`;
+      
+    const finalName = formState.comment 
+      ? `${formState.name} (Комм: ${formState.comment})` 
+      : formState.name;
+
     const payload = {
-      name: formState.name,
-      phone: `+374 ${formState.phone.replace(/^\+?374\s*/, '')}`, 
+      name: finalName,
+      phone: finalPhone, 
       service: bookingModal.service?.name || d.byAgreement,
       slot: bookingModal.slot ? `${bookingModal.slot.fullDate} ${bookingModal.slot.time}` : d.willChooseInChat,
       timestamp: new Date().toISOString()
@@ -613,7 +630,6 @@ export default function App() {
       }).catch(err => console.error("Ошибка фоновой отправки:", err));
     }
 
-    // Мгновенный оптимистичный интерфейс
     setTimeout(() => {
       setFormState(prev => ({ ...prev, isSubmitting: false, isSuccess: true }));
       
@@ -654,7 +670,6 @@ export default function App() {
       
       <Toast message={toast.message} isVisible={toast.visible} t={t} />
 
-      {/* LANGUAGE SWITCHER */}
       <div 
         className={`absolute z-[90] flex items-center p-1 rounded-full backdrop-blur-md shadow-sm transition-colors duration-300 ${t.pillBg}`}
         style={{ top: 'calc(1rem + env(safe-area-inset-top))', left: '50%', transform: 'translateX(-50%)' }}
@@ -673,7 +688,6 @@ export default function App() {
         </button>
       </div>
 
-      {/* THEME SWITCHER */}
       <div className="fixed bottom-6 right-6 z-[90] flex flex-col items-end gap-3">
         <div className={`flex flex-col gap-2 transition-all duration-300 origin-bottom ${isThemeMenuOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}>
           {THEME_OPTIONS.map(opt => (
@@ -704,10 +718,10 @@ export default function App() {
             alt={data.master.name} 
             className={`relative w-28 h-28 object-cover rounded-full border-4 shadow-lg object-top transition-colors duration-300 ${t.avatarBorder}`}
           />
-          <div className={`absolute -bottom-1 -right-1 p-1 rounded-full shadow-sm transition-colors duration-300 ${t.headerBg}`}>
-            <span className={`flex items-center justify-center w-6 h-6 rounded-full relative z-10 ${t.successBg}`}>
-              <span className={`w-2.5 h-2.5 rounded-full animate-ping absolute opacity-75 ${t.statusDotBg}`} />
-              <span className={`w-2 h-2 rounded-full relative z-20 ${t.statusDotBg}`} />
+          <div className={`absolute -bottom-1 -right-1 p-1.5 rounded-full shadow-sm transition-colors duration-300 ${t.headerBg}`}>
+            <span className={`flex items-center justify-center w-5 h-5 rounded-full relative z-10 bg-emerald-500`}>
+              <span className={`w-2.5 h-2.5 rounded-full animate-ping absolute opacity-75 bg-emerald-300`} />
+              <span className={`w-1.5 h-1.5 rounded-full relative z-20 bg-white`} />
             </span>
           </div>
         </div>
@@ -736,7 +750,6 @@ export default function App() {
 
       <main className="px-5 mt-8 w-full max-w-md mx-auto space-y-10 flex-1 relative z-10">
         
-        {/* БЛОК СВОБОДНЫЕ ОКНА */}
         <section>
           <SectionTitle title={d.availableSlots} icon={Sparkles} t={t} />
           
@@ -769,7 +782,6 @@ export default function App() {
             </div>
           ) : (
             <>
-              {/* Предупреждение об отпуске (FOMO-триггер или даты) */}
               {showBanner && (
                 <div className={`mb-5 p-3.5 rounded-2xl flex items-start gap-3 border transition-colors duration-300 ${t.accentBg} ${t.accentText} border-current/20`}>
                   <Info size={20} className="flex-shrink-0 mt-0.5" />
@@ -777,9 +789,9 @@ export default function App() {
                 </div>
               )}
 
-              {/* Карусель дат с горизонтальным скроллом */}
+              {}
               <div className="relative mb-5">
-                <div className="flex gap-2.5 overflow-x-auto pb-4 -mx-5 px-5 scrollbar-hide snap-x items-center">
+                <div className="flex gap-2.5 overflow-x-auto pt-3 pb-4 -mx-5 px-5 scrollbar-hide snap-x items-center">
                   {availableDates.map((day, idx) => (
                     <button
                       key={day.id}
@@ -798,7 +810,6 @@ export default function App() {
                   ))}
                 </div>
 
-                {/* Стрелочка-подсказка скролла, наложенная поверх правого края */}
                 {availableDates.length > 3 && (
                   <div 
                     className="absolute -right-5 top-0 bottom-4 w-16 pointer-events-none flex items-center justify-end pr-3 z-10"
@@ -809,7 +820,6 @@ export default function App() {
                 )}
               </div>
 
-              {/* Сетка времени для выбранной даты */}
               {availableDates[selectedDateIdx] && (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 animate-[slideUp_0.3s_ease-out]">
                   {availableDates[selectedDateIdx].times.map((time, idx) => (
@@ -831,19 +841,18 @@ export default function App() {
           )}
         </section>
 
-        {/* БЛОК ПРАЙС-ЛИСТ */}
         <section>
           <SectionTitle title={d.priceList} icon={Star} t={t} />
           
-          <div className="flex gap-2 overflow-x-auto pb-2 mb-4 -mx-5 px-5 scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto pt-3 pb-4 -mx-5 px-5 scrollbar-hide">
             {categories.map(category => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 className={`whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border ${
                   activeCategory === category 
-                    ? `${t.tabActive} shadow-md border-transparent` 
-                    : t.tabInactive
+                    ? `${t.tabActive} shadow-md border-transparent scale-105` 
+                    : `${t.tabInactive} scale-100`
                 }`}
               >
                 {category}
@@ -882,7 +891,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* БЛОК ОПЛАТА */}
         <section>
           <SectionTitle title={d.paymentDetails} icon={CreditCard} t={t} />
           <div className={`rounded-3xl p-2 border flex flex-col gap-1 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} ${t.cardShadow}`}>
@@ -912,7 +920,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* БЛОК ПРАВИЛА */}
         <section>
           <SectionTitle title={d.rules} icon={ShieldAlert} t={t} />
           <div className={`rounded-3xl p-5 border transition-colors duration-300 ${t.policyBg} ${t.cardBorder}`}>
@@ -928,7 +935,6 @@ export default function App() {
         </section>
       </main>
 
-      {/* ФУТЕР */}
       <footer className={`mt-12 border-t py-10 px-5 flex flex-col items-center w-full transition-colors duration-300 relative z-10 pb-28 ${t.footerBg} ${t.footerBorder}`}>
         
         <div className="w-full max-w-xs space-y-3 mb-8">
@@ -999,6 +1005,7 @@ export default function App() {
         </div>
       )}
 
+      {}
       {bookingModal.isOpen && (
         <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 h-[100dvh]">
           <div 
@@ -1006,7 +1013,7 @@ export default function App() {
             onClick={closeBooking}
           />
           
-          <div className={`relative w-full max-w-lg rounded-t-[2rem] sm:rounded-3xl shadow-2xl p-6 modal-wrapper animate-[slideUp_0.3s_ease-out] transition-colors duration-300 ${t.modalBg}`}>
+          <div className={`relative w-full max-w-lg rounded-t-[2rem] sm:rounded-3xl shadow-2xl p-6 modal-wrapper animate-[slideUp_0.3s_ease-out] transition-colors duration-300 max-h-[90dvh] overflow-y-auto scrollbar-hide ${t.modalBg}`}>
             <div className={`w-12 h-1.5 rounded-full mx-auto mb-6 sm:hidden transition-colors duration-300 ${t.grabber}`} />
             
             <button 
@@ -1043,7 +1050,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <form onSubmit={handleBookingSubmit} className="space-y-4">
+                <form onSubmit={handleBookingSubmit} className="space-y-3">
                   <div>
                     <label className={`block text-sm font-semibold mb-1.5 ml-1 transition-colors duration-300 ${t.cardTextMain}`}>{d.yourName}</label>
                     <div className={`rounded-2xl border transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
@@ -1057,19 +1064,59 @@ export default function App() {
                       />
                     </div>
                   </div>
+                  
                   <div>
                     <label className={`block text-sm font-semibold mb-1.5 ml-1 transition-colors duration-300 ${t.cardTextMain}`}>{d.phoneNum}</label>
-                    <div className={`relative flex items-center rounded-2xl border transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
-                      <span className={`absolute left-4 font-semibold pointer-events-none select-none transition-colors duration-300 ${t.cardTextSub}`}>
-                        +374
-                      </span>
+                    <div className={`rounded-2xl border transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
                       <input 
                         type="tel" 
                         required
                         value={formState.phone}
-                        onChange={e => setFormState(prev => ({ ...prev, phone: e.target.value }))}
-                        placeholder="(__) ___-___" 
-                        className={`w-full pl-16 pr-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`}
+                        onChange={e => {
+                          const val = e.target.value;
+                          setFormState(prev => ({ ...prev, phone: val, ...(prev.sameAsPhone ? {whatsapp: val} : {}) }))
+                        }}
+                        placeholder={d.phonePlaceholder} 
+                        className={`w-full px-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`}
+                      />
+                    </div>
+                    
+                    <label className="flex items-center gap-2 mt-2 mb-1 ml-1 cursor-pointer w-max">
+                      <input 
+                          type="checkbox" 
+                          checked={formState.sameAsPhone}
+                          onChange={e => setFormState(prev => ({ ...prev, sameAsPhone: e.target.checked, whatsapp: e.target.checked ? prev.phone : prev.whatsapp }))}
+                          className="w-4 h-4 rounded border-gray-300 text-[#D4A373] focus:ring-[#D4A373] accent-current"
+                      />
+                      <span className={`text-xs font-medium transition-colors duration-300 ${t.cardTextSub}`}>{d.waCheckbox}</span>
+                    </label>
+                  </div>
+
+                  {!formState.sameAsPhone && (
+                    <div className="animate-[slideUp_0.2s_ease-out]">
+                      <label className={`block text-sm font-semibold mb-1.5 ml-1 transition-colors duration-300 ${t.cardTextMain}`}>{d.waLabel}</label>
+                      <div className={`rounded-2xl border transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
+                        <input 
+                          type="tel" 
+                          required={!formState.sameAsPhone}
+                          value={formState.whatsapp}
+                          onChange={e => setFormState(prev => ({ ...prev, whatsapp: e.target.value }))}
+                          placeholder={d.waPlaceholder} 
+                          className={`w-full px-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <label className={`block text-sm font-semibold mb-1.5 ml-1 transition-colors duration-300 ${t.cardTextMain}`}>{d.commentLabel}</label>
+                    <div className={`rounded-2xl border transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
+                      <textarea 
+                        rows="2"
+                        value={formState.comment}
+                        onChange={e => setFormState(prev => ({ ...prev, comment: e.target.value }))}
+                        placeholder={d.commentPlaceholder} 
+                        className={`w-full px-4 py-3 bg-transparent focus:outline-none font-medium placeholder:opacity-40 resize-none ${t.inputText}`}
                       />
                     </div>
                   </div>
@@ -1077,7 +1124,7 @@ export default function App() {
                   <button 
                     type="submit" 
                     disabled={formState.isSubmitting}
-                    className={`w-full mt-2 py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:active:scale-100 ${t.btnPrimary}`}
+                    className={`w-full mt-4 py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:active:scale-100 ${t.btnPrimary}`}
                   >
                     {formState.isSubmitting ? (
                       <span className="flex items-center gap-2">
