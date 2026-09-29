@@ -38,7 +38,7 @@ function WalletIcon(props) {
   );
 }
 
-// URL обфусцирован (зашифрован в base64) для защиты от простых парсеров исходного кода.
+// URL обфусцирован для защиты от простых парсеров.
 const GOOGLE_APPS_SCRIPT_URL = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J4SkVWb2RocncwRF9GdnFMaktYcEpqRmJCZnZLNXpKd1g3NWQ0b3FObXBhMmNFc1doV25xMW56NkhscmRLUDJ6R0JwUS9leGVj'); 
 
 const DICT = {
@@ -76,6 +76,7 @@ const DICT = {
     loadingSlots: "Համաժամացում...",
     noSlots: "Այս պահին ազատ պատուհաններ չկան կամ վարպետը արձակուրդում է 🌴 Հավաքում եմ ուժեր ձեզ ավելի գեղեցիկ դարձնելու համար: Մոտ օրերս նոր պատուհաններ կավելանան:",
     upcomingVacation: "Շուտով արձակուրդ է 🌴 Հասցրեք գրանցվել մնացած ազատ օրերին:",
+    upcomingVacationDates: (start, end) => `Շուտով արձակուրդ է 🌴 (${start} - ${end}): Հասցրեք գրանցվել վերջին ազատ օրերին!`,
     // Mock Data
     s_manicure: "Մատնահարդարում",
     s_pedicure: "Պեդիկյուր",
@@ -122,6 +123,7 @@ const DICT = {
     loadingSlots: "Синхронизация расписания...",
     noSlots: "Свободных окон пока нет или мастер в отпуске 🌴 Набираюсь сил, чтобы делать вас еще красивее! Окошки скоро появятся.",
     upcomingVacation: "Скоро отпуск 🌴 Успейте занять последние свободные окна!",
+    upcomingVacationDates: (start, end) => `Скоро отпуск 🌴 (${start} - ${end}). Успейте занять последние окна!`,
     // Mock Data
     s_manicure: "Маникюр",
     s_pedicure: "Педикюр",
@@ -424,6 +426,8 @@ export default function App() {
   const d = DICT[lang]; 
   const data = getMockData(lang); 
 
+  // Храним сырые данные, чтобы не дергать сервер при смене языка
+  const [rawDates, setRawDates] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
   const [isLoadingDates, setIsLoadingDates] = useState(true);
   const [selectedDateIdx, setSelectedDateIdx] = useState(0); 
@@ -470,6 +474,7 @@ export default function App() {
     setActiveCategory(data.services[0].category);
   }, [lang]);
 
+  // СКАЧИВАЕМ ДАННЫЕ ОДИН РАЗ
   useEffect(() => {
     const fetchSlots = async () => {
       setIsLoadingDates(true);
@@ -478,31 +483,42 @@ export default function App() {
         const fetchedData = await res.json();
         
         if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-          const parsedDates = fetchedData.map((dayObj, i) => {
-            const parsed = parseSheetDate(dayObj.date, lang);
-            return {
-              id: dayObj.id || i,
-              fullDate: parsed.fullDate,
-              shortDate: parsed.shortDate,
-              label: parsed.label,
-              times: dayObj.times 
-            };
-          });
-          setAvailableDates(parsedDates);
-          setSelectedDateIdx(0);
+          setRawDates(fetchedData);
         } else {
-          setAvailableDates([]);
+          setRawDates([]);
         }
       } catch (error) {
         console.error("Ошибка при загрузке расписания:", error);
-        setAvailableDates([]);
+        setRawDates([]);
       } finally {
         setIsLoadingDates(false);
       }
     };
 
     fetchSlots();
-  }, [lang]);
+  }, []); // Пустой массив зависимостей = загружаем только 1 раз!
+
+  // ПЕРЕСОБИРАЕМ ДАТЫ ПРИ СМЕНЕ ЯЗЫКА (Мгновенно)
+  useEffect(() => {
+    if (rawDates.length > 0) {
+      const parsedDates = rawDates
+        .filter(dayObj => dayObj.times && dayObj.times[0] !== 'отпуск')
+        .map((dayObj, i) => {
+          const parsed = parseSheetDate(dayObj.date, lang);
+          return {
+            id: dayObj.id || i,
+            fullDate: parsed.fullDate,
+            shortDate: parsed.shortDate,
+            label: parsed.label,
+            times: dayObj.times 
+          };
+        });
+      setAvailableDates(parsedDates);
+      setSelectedDateIdx(prev => prev >= parsedDates.length ? 0 : prev);
+    } else {
+      setAvailableDates([]);
+    }
+  }, [rawDates, lang]);
 
   const t = THEMES[theme];
 
@@ -597,7 +613,7 @@ export default function App() {
       }).catch(err => console.error("Ошибка фоновой отправки:", err));
     }
 
-    // Мгновенный оптимистичный интерфейс (не ждем ответа от сервера)
+    // Мгновенный оптимистичный интерфейс
     setTimeout(() => {
       setFormState(prev => ({ ...prev, isSubmitting: false, isSuccess: true }));
       
@@ -615,6 +631,20 @@ export default function App() {
       setTimeout(closeBooking, 3000);
     }, 400);
   };
+
+  const vacationDays = rawDates.filter(d => d.times && d.times[0] === 'отпуск');
+  let showBanner = false;
+  let bannerText = d.upcomingVacation;
+
+  if (vacationDays.length > 0) {
+    showBanner = true;
+    const firstDay = parseSheetDate(vacationDays[0].date, lang).shortDate;
+    const lastDay = parseSheetDate(vacationDays[vacationDays.length - 1].date, lang).shortDate;
+    bannerText = d.upcomingVacationDates(firstDay, lastDay);
+  } else if (availableDates.length > 0 && availableDates.length <= 5) {
+    showBanner = true;
+    bannerText = d.upcomingVacation;
+  }
 
   const categories = [...new Set(data.services.map(s => s.category))];
   const filteredServices = data.services.filter(s => s.category === activeCategory);
@@ -731,15 +761,19 @@ export default function App() {
               <div className={`w-14 h-14 rounded-full flex items-center justify-center ${t.accentBg} ${t.accentText}`}>
                 <Calendar size={28} />
               </div>
-              <p className={`text-sm font-medium leading-relaxed ${t.cardTextMain}`}>{d.noSlots}</p>
+              <p className={`text-sm font-medium leading-relaxed ${t.cardTextMain}`}>
+                {vacationDays.length > 0 
+                  ? `${bannerText} ${lang === 'ru' ? 'Окошки откроются позже.' : 'Նոր պատուհաններ կավելանան ավելի ուշ:'}` 
+                  : d.noSlots}
+              </p>
             </div>
           ) : (
             <>
-              {/* Предупреждение об отпуске (FOMO-триггер), если осталось мало дат */}
-              {availableDates.length > 0 && availableDates.length <= 5 && (
+              {/* Предупреждение об отпуске (FOMO-триггер или даты) */}
+              {showBanner && (
                 <div className={`mb-5 p-3.5 rounded-2xl flex items-start gap-3 border transition-colors duration-300 ${t.accentBg} ${t.accentText} border-current/20`}>
                   <Info size={20} className="flex-shrink-0 mt-0.5" />
-                  <p className="text-sm font-medium leading-snug">{d.upcomingVacation}</p>
+                  <p className="text-sm font-medium leading-snug">{bannerText}</p>
                 </div>
               )}
 
@@ -762,14 +796,17 @@ export default function App() {
                       {day.label && <span className="text-[10px] font-semibold uppercase tracking-wider mt-1 opacity-80">{day.label}</span>}
                     </button>
                   ))}
-                  
-                  {/* Иконка-подсказка скролла (Стрелочка вправо) */}
-                  {availableDates.length > 3 && (
-                    <div className="snap-center flex-shrink-0 flex items-center justify-center pl-1 pr-5 opacity-40">
-                      <ChevronRight size={28} className="animate-[pulse_1.5s_ease-in-out_infinite]" />
-                    </div>
-                  )}
                 </div>
+
+                {/* Стрелочка-подсказка скролла, наложенная поверх правого края */}
+                {availableDates.length > 3 && (
+                  <div 
+                    className="absolute -right-5 top-0 bottom-4 w-16 pointer-events-none flex items-center justify-end pr-3 z-10"
+                    style={{ background: `linear-gradient(to right, transparent 0%, ${THEME_OPTIONS.find(o => o.id === theme).color} 70%)` }}
+                  >
+                    <ChevronRight size={24} className={`animate-[pulse_1.5s_ease-in-out_infinite] opacity-60 ${t.appTextMain}`} />
+                  </div>
+                )}
               </div>
 
               {/* Сетка времени для выбранной даты */}
