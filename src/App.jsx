@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Calendar, Clock, MapPin, Sparkles, Copy, Check, 
-  Phone, Send, X, ChevronRight, CreditCard, 
+  Phone, Send, X, ChevronRight, ChevronDown, CreditCard, 
   Info, ShieldAlert, Star, Palette, QrCode, UserPlus, 
   DownloadCloud, Smartphone
 } from 'lucide-react';
@@ -187,7 +187,8 @@ const getMockData = (lang) => ({
   master: {
     name: lang === 'hy' ? "Անի Սարգսյան" : "Ани Саркисян",
     specialization: DICT[lang].spec,
-    location: DICT[lang].location,
+    location: lang === 'hy' ? "Էջմիածին, Մաշտոցի փող., 48" : "г. Эчмиадзин, ул. Маштоца, 48",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Эчмиадзин+Маштоца+48",
     avatar: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80",
     status: DICT[lang].status
   },
@@ -418,6 +419,170 @@ const THEMES = {
     cardShadow: "shadow-[0_4px_20px_-8px_rgba(44,34,30,0.15)]",
     pillBg: "bg-black/5",
     skeletonBg: "bg-[#4A3B32]/50",
+  },
+  rose: {
+    appBg: "bg-[#FCF7F8]",
+    appTextMain: "text-[#5C3A41]",
+    appTextSub: "text-[#5C3A41]/70",
+    headerBg: "bg-white",
+    avatarBorder: "border-white",
+    glow: "bg-[#F2A4B3]/20",
+    cardBg: "bg-white",
+    cardBorder: "border-[#F7DADD]",
+    cardTextMain: "text-[#5C3A41]",
+    cardTextSub: "text-[#5C3A41]/60",
+    btnPrimary: "bg-[#F2A4B3] text-white font-semibold shadow-[#F2A4B3]/30",
+    accentText: "text-[#E07A8F]",
+    accentBg: "bg-[#F2A4B3]/15",
+    badgeBg: "bg-[#F2A4B3]/10",
+    badgeText: "text-[#E07A8F]",
+    statusBadgeBg: "bg-[#F2A4B3]/15",
+    statusBadgeText: "text-[#E07A8F]",
+    tabActive: "bg-[#5C3A41] text-white",
+    tabInactive: "bg-white text-[#5C3A41]/70 border-[#F7DADD]",
+    btnSecondary: "bg-[#FCF7F8] text-[#5C3A41] hover:bg-[#F7EAEB]",
+    iconWrapper: "bg-[#FCF7F8] text-[#E07A8F]",
+    policyBg: "bg-[#F2A4B3]/5",
+    bullet: "bg-[#E07A8F]",
+    footerBg: "bg-white",
+    footerBorder: "border-[#F7DADD]",
+    modalBg: "bg-white",
+    grabber: "bg-[#F7DADD]",
+    inputBg: "bg-[#FCF7F8] focus-within:bg-white",
+    inputBorder: "border-transparent focus-within:border-[#F2A4B3]",
+    inputFocusRing: "focus-within:ring-[#F2A4B3]/30",
+    inputText: "text-[#5C3A41]",
+    toastBg: "bg-[#5C3A41]",
+    toastText: "text-white",
+    successIcon: "text-[#E07A8F]",
+    successBg: "bg-[#F2A4B3]/20",
+    statusDotBg: "bg-[#E07A8F]",
+    cardShadow: "shadow-[0_4px_20px_-8px_rgba(242,164,179,0.15)]",
+    pillBg: "bg-[#F2A4B3]/15",
+    skeletonBg: "bg-[#F7DADD]/50",
+  },
+  lavender: {
+    appBg: "bg-[#F9F9FE]",
+    appTextMain: "text-[#3D3B4A]",
+    appTextSub: "text-[#3D3B4A]/70",
+    headerBg: "bg-white",
+    avatarBorder: "border-white",
+    glow: "bg-[#B3A4F2]/20",
+    cardBg: "bg-white",
+    cardBorder: "border-[#E4DDF7]",
+    cardTextMain: "text-[#3D3B4A]",
+    cardTextSub: "text-[#3D3B4A]/60",
+    btnPrimary: "bg-[#B3A4F2] text-white font-semibold shadow-[#B3A4F2]/30",
+    accentText: "text-[#8E79DF]",
+    accentBg: "bg-[#B3A4F2]/15",
+    badgeBg: "bg-[#B3A4F2]/10",
+    badgeText: "text-[#8E79DF]",
+    statusBadgeBg: "bg-[#B3A4F2]/15",
+    statusBadgeText: "text-[#8E79DF]",
+    tabActive: "bg-[#3D3B4A] text-white",
+    tabInactive: "bg-white text-[#3D3B4A]/70 border-[#E4DDF7]",
+    btnSecondary: "bg-[#F9F9FE] text-[#3D3B4A] hover:bg-[#EBEAF5]",
+    iconWrapper: "bg-[#F9F9FE] text-[#8E79DF]",
+    policyBg: "bg-[#B3A4F2]/5",
+    bullet: "bg-[#8E79DF]",
+    footerBg: "bg-white",
+    footerBorder: "border-[#E4DDF7]",
+    modalBg: "bg-white",
+    grabber: "bg-[#E4DDF7]",
+    inputBg: "bg-[#F9F9FE] focus-within:bg-white",
+    inputBorder: "border-transparent focus-within:border-[#B3A4F2]",
+    inputFocusRing: "focus-within:ring-[#B3A4F2]/30",
+    inputText: "text-[#3D3B4A]",
+    toastBg: "bg-[#3D3B4A]",
+    toastText: "text-white",
+    successIcon: "text-[#8E79DF]",
+    successBg: "bg-[#B3A4F2]/20",
+    statusDotBg: "bg-[#8E79DF]",
+    cardShadow: "shadow-[0_4px_20px_-8px_rgba(179,164,242,0.15)]",
+    pillBg: "bg-[#B3A4F2]/15",
+    skeletonBg: "bg-[#E4DDF7]/50",
+  },
+  carbon: {
+    appBg: "bg-[#111111]",
+    appTextMain: "text-[#EAEAEA]",
+    appTextSub: "text-[#A0A0A0]",
+    headerBg: "bg-[#1A1A1A]",
+    avatarBorder: "border-[#1A1A1A]",
+    glow: "bg-[#FFFFFF]/5",
+    cardBg: "bg-[#1A1A1A]",
+    cardBorder: "border-[#2A2A2A]",
+    cardTextMain: "text-[#EAEAEA]",
+    cardTextSub: "text-[#A0A0A0]",
+    btnPrimary: "bg-white text-black font-semibold shadow-white/10",
+    accentText: "text-white",
+    accentBg: "bg-white/10",
+    badgeBg: "bg-[#2A2A2A]",
+    badgeText: "text-[#EAEAEA]",
+    statusBadgeBg: "bg-white/10",
+    statusBadgeText: "text-white",
+    tabActive: "bg-white text-black",
+    tabInactive: "bg-[#1A1A1A] text-[#A0A0A0] border-[#2A2A2A]",
+    btnSecondary: "bg-[#2A2A2A] text-[#EAEAEA] hover:bg-[#333333]",
+    iconWrapper: "bg-[#2A2A2A] text-white",
+    policyBg: "bg-[#1A1A1A]",
+    bullet: "bg-white",
+    footerBg: "bg-[#1A1A1A]",
+    footerBorder: "border-[#2A2A2A]",
+    modalBg: "bg-[#1A1A1A]",
+    grabber: "bg-[#2A2A2A]",
+    inputBg: "bg-[#111111] focus-within:bg-[#1A1A1A]",
+    inputBorder: "border-transparent focus-within:border-white/50",
+    inputFocusRing: "focus-within:ring-white/20",
+    inputText: "text-[#EAEAEA]",
+    toastBg: "bg-[#2A2A2A]",
+    toastText: "text-[#EAEAEA]",
+    successIcon: "text-white",
+    successBg: "bg-white/20",
+    statusDotBg: "bg-white",
+    cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]",
+    pillBg: "bg-white/10",
+    skeletonBg: "bg-white/5",
+  },
+  cognac: {
+    appBg: "bg-[#140D0B]",
+    appTextMain: "text-[#F3E6D9]",
+    appTextSub: "text-[#F3E6D9]/60",
+    headerBg: "bg-[#1C1310]",
+    avatarBorder: "border-[#1C1310]",
+    glow: "bg-[#D97736]/15",
+    cardBg: "bg-[#1C1310]",
+    cardBorder: "border-[#2D1F1A]",
+    cardTextMain: "text-[#F3E6D9]",
+    cardTextSub: "text-[#F3E6D9]/50",
+    btnPrimary: "bg-[#D97736] text-white font-semibold shadow-[#D97736]/20",
+    accentText: "text-[#D97736]",
+    accentBg: "bg-[#D97736]/10",
+    badgeBg: "bg-[#2D1F1A]",
+    badgeText: "text-[#F3E6D9]",
+    statusBadgeBg: "bg-[#D97736]/10",
+    statusBadgeText: "text-[#D97736]",
+    tabActive: "bg-[#D97736] text-white",
+    tabInactive: "bg-[#1C1310] text-[#F3E6D9]/60 border-[#2D1F1A]",
+    btnSecondary: "bg-[#2D1F1A] text-[#F3E6D9] hover:bg-[#3A2822]",
+    iconWrapper: "bg-[#2D1F1A] text-[#D97736]",
+    policyBg: "bg-[#1C1310]",
+    bullet: "bg-[#D97736]",
+    footerBg: "bg-[#1C1310]",
+    footerBorder: "border-[#2D1F1A]",
+    modalBg: "bg-[#1C1310]",
+    grabber: "bg-[#2D1F1A]",
+    inputBg: "bg-[#140D0B] focus-within:bg-[#1C1310]",
+    inputBorder: "border-transparent focus-within:border-[#D97736]",
+    inputFocusRing: "focus-within:ring-[#D97736]/30",
+    inputText: "text-[#F3E6D9]",
+    toastBg: "bg-[#2D1F1A]",
+    toastText: "text-[#F3E6D9]",
+    successIcon: "text-[#D97736]",
+    successBg: "bg-[#D97736]/15",
+    statusDotBg: "bg-[#D97736]",
+    cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]",
+    pillBg: "bg-white/5",
+    skeletonBg: "bg-white/5",
   }
 };
 
@@ -425,7 +590,11 @@ const THEME_OPTIONS = [
   { id: 'nude', color: '#FDFBF7', border: '#D4A373' },
   { id: 'obsidian', color: '#0F0F11', border: '#D4AF37' },
   { id: 'emerald', color: '#0B1D17', border: '#5EEAD4' },
-  { id: 'espresso', color: '#F5F0EB', border: '#C5A059' }
+  { id: 'espresso', color: '#F5F0EB', border: '#C5A059' },
+  { id: 'rose', color: '#FCF7F8', border: '#F2A4B3' },
+  { id: 'lavender', color: '#F9F9FE', border: '#B3A4F2' },
+  { id: 'carbon', color: '#111111', border: '#FFFFFF' },
+  { id: 'cognac', color: '#140D0B', border: '#D97736' }
 ];
 
 const Toast = ({ message, isVisible, t }) => (
@@ -482,6 +651,7 @@ export default function App() {
   const [copiedPaymentId, setCopiedPaymentId] = useState(null);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const [isQrOpen, setIsQrOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
   
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
@@ -569,6 +739,15 @@ export default function App() {
     }
   }, [rawDates, lang]);
 
+  // Закрытие выпадающих списков при клике вне их области
+  useEffect(() => {
+    const close = () => setOpenDropdown(null);
+    if (openDropdown) {
+      document.addEventListener('click', close);
+    }
+    return () => document.removeEventListener('click', close);
+  }, [openDropdown]);
+
   const t = THEMES[theme];
 
   const showToast = useCallback((message) => {
@@ -629,16 +808,37 @@ export default function App() {
   };
 
   const openBooking = (service = null, slot = null) => {
-    setBookingModal({ isOpen: true, service, slot });
+    const defaultService = service || data.services[0];
+    
+    let defaultSlot = slot;
+    if (!defaultSlot && availableDates.length > 0) {
+      defaultSlot = {
+        fullDate: availableDates[0].fullDate,
+        displayDate: availableDates[0].shortDate,
+        time: availableDates[0].times[0]
+      };
+    }
+
+    setBookingModal({ isOpen: true, service: defaultService, slot: defaultSlot });
     setFormState({ name: "", phone: "", whatsapp: "", sameAsPhone: true, comment: "", isSubmitting: false, isSuccess: false });
-    document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
+    
+    // Надежная блокировка скролла фона (особенно для iOS)
+    const scrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
   };
 
   const closeBooking = () => {
     setBookingModal({ isOpen: false, service: null, slot: null });
-    document.body.style.overflow = '';
-    document.body.style.touchAction = '';
+    setOpenDropdown(null);
+    
+    // Возвращаем скролл на место
+    const scrollY = document.body.style.top;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, parseInt(scrollY || '0') * -1);
   };
 
   const handleBookingSubmit = (e) => {
@@ -767,10 +967,15 @@ export default function App() {
         <p className={`font-medium mb-4 transition-colors duration-300 ${t.appTextSub}`}>{data.master.specialization}</p>
 
         <div className="flex flex-wrap justify-center gap-2 mb-6">
-          <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full backdrop-blur-sm transition-colors duration-300 ${t.badgeBg} ${t.badgeText}`}>
+          <a 
+            href={data.master.mapUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full backdrop-blur-sm transition-all duration-300 active:scale-95 hover:opacity-80 shadow-sm ${t.badgeBg} ${t.badgeText}`}
+          >
             <MapPin size={14} className="opacity-70" />
             {data.master.location}
-          </span>
+          </a>
           <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full transition-colors duration-300 ${t.statusBadgeBg} ${t.statusBadgeText}`}>
             {data.master.status}
           </span>
@@ -1070,54 +1275,78 @@ export default function App() {
               <>
                 <h2 className={`text-2xl font-bold mb-6 transition-colors duration-300 ${t.cardTextMain}`}>{d.bookingTitle}</h2>
                 
-                <div className={`rounded-2xl p-4 mb-6 border transition-colors duration-300 flex flex-col gap-3 ${t.inputBg} ${t.cardBorder}`}>
+                <div className={`rounded-2xl p-4 mb-6 border transition-colors duration-300 flex flex-col gap-4 ${t.inputBg} ${t.cardBorder}`}>
                   
-                  <div className={`flex justify-between items-center border-b pb-3 ${t.cardBorder}`}>
-                    <span className={`text-sm transition-colors duration-300 ${t.cardTextSub}`}>{d.service}</span>
-                    <select 
-                      value={bookingModal.service?.id || ""}
-                      onChange={(e) => {
-                        const srv = data.services.find(s => s.id === e.target.value);
-                        setBookingModal(prev => ({ ...prev, service: srv || null }));
-                      }}
-                      className={`font-semibold bg-transparent text-right outline-none appearance-none max-w-[65%] truncate transition-colors duration-300 cursor-pointer ${t.cardTextMain}`}
+                  {/* Красивый кастомный выбор услуги */}
+                  <div className={`relative border-b pb-4 ${t.cardBorder}`}>
+                    <span className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${t.cardTextSub}`}>{d.service}</span>
+                    <div 
+                      onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'service' ? null : 'service'); }}
+                      className={`flex justify-between items-center w-full p-3.5 rounded-xl border cursor-pointer transition-all bg-white/50 backdrop-blur-sm shadow-sm ${t.inputBorder} ${openDropdown === 'service' ? 'ring-2 ' + t.inputFocusRing : ''}`}
                     >
-                      <option value="">{d.byAgreement}</option>
-                      {data.services.map(s => (
-                        <option key={s.id} value={s.id}>{s.name}</option>
-                      ))}
-                    </select>
+                      <span className={`font-bold truncate pr-2 ${t.cardTextMain}`}>
+                        {bookingModal.service?.name}
+                      </span>
+                      <ChevronDown size={18} className={`transition-transform duration-300 flex-shrink-0 ${t.cardTextSub} ${openDropdown === 'service' ? 'rotate-180' : ''}`} />
+                    </div>
+
+                    {openDropdown === 'service' && (
+                      <div className={`absolute left-0 right-0 top-full mt-2 z-[60] max-h-60 overflow-y-auto rounded-xl border shadow-2xl animate-[slideDown_0.2s_ease-out] ${t.cardBg} ${t.cardBorder}`}>
+                        {data.services.map(s => (
+                          <div 
+                            key={s.id}
+                            onClick={() => { setBookingModal(prev => ({...prev, service: s})); setOpenDropdown(null); }}
+                            className={`p-3.5 border-b last:border-b-0 cursor-pointer hover:bg-black/5 active:bg-black/10 transition-colors ${t.cardBorder}`}
+                          >
+                            <div className={`font-bold ${t.cardTextMain}`}>{s.name}</div>
+                            <div className={`text-xs mt-1 font-semibold opacity-70 ${t.cardTextSub}`}>{s.price.toLocaleString('ru-RU')} AMD</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
-                  <div className="flex justify-between items-center">
-                    <span className={`text-sm transition-colors duration-300 ${t.cardTextSub}`}>{d.time}</span>
-                    <select 
-                      value={bookingModal.slot ? `${bookingModal.slot.fullDate}|${bookingModal.slot.time}` : ""}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (!val) {
-                          setBookingModal(prev => ({ ...prev, slot: null }));
-                          return;
-                        }
-                        const [fDate, fTime] = val.split('|');
-                        const dayObj = availableDates.find(d => d.fullDate === fDate);
-                        if (dayObj) {
-                          setBookingModal(prev => ({ ...prev, slot: { fullDate: fDate, displayDate: dayObj.shortDate, time: fTime } }));
-                        }
-                      }}
-                      className={`font-semibold bg-transparent text-right outline-none appearance-none max-w-[65%] truncate transition-colors duration-300 cursor-pointer ${t.cardTextMain}`}
+                  {/* Красивый кастомный выбор времени */}
+                  <div className="relative">
+                    <span className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${t.cardTextSub}`}>{d.time}</span>
+                    <div 
+                      onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'time' ? null : 'time'); }}
+                      className={`flex justify-between items-center w-full p-3.5 rounded-xl border cursor-pointer transition-all bg-white/50 backdrop-blur-sm shadow-sm ${t.inputBorder} ${openDropdown === 'time' ? 'ring-2 ' + t.inputFocusRing : ''}`}
                     >
-                      <option value="">{d.willChooseInChat}</option>
-                      {availableDates.map(day => (
-                        <optgroup key={day.id} label={day.shortDate}>
-                          {day.times.map(time => (
-                            <option key={`${day.fullDate}|${time}`} value={`${day.fullDate}|${time}`}>
-                              {day.shortDate}, {time}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))}
-                    </select>
+                      <span className={`font-bold truncate pr-2 ${t.cardTextMain}`}>
+                        {bookingModal.slot ? `${bookingModal.slot.displayDate}, ${bookingModal.slot.time}` : d.willChooseInChat}
+                      </span>
+                      <ChevronDown size={18} className={`transition-transform duration-300 flex-shrink-0 ${t.cardTextSub} ${openDropdown === 'time' ? 'rotate-180' : ''}`} />
+                    </div>
+
+                    {openDropdown === 'time' && (
+                      <div className={`absolute left-0 right-0 top-full mt-2 z-[60] max-h-60 overflow-y-auto rounded-xl border shadow-2xl animate-[slideDown_0.2s_ease-out] ${t.cardBg} ${t.cardBorder}`}>
+                        {availableDates.length > 0 ? availableDates.map(day => (
+                          <div key={day.id}>
+                            <div className={`sticky top-0 px-4 py-2 text-xs font-black uppercase tracking-widest backdrop-blur-md bg-black/5 ${t.cardTextMain}`}>
+                              {day.shortDate}
+                            </div>
+                            <div className="grid grid-cols-3 gap-2 p-3">
+                              {day.times.map(time => (
+                                <div 
+                                  key={`${day.fullDate}|${time}`}
+                                  onClick={() => { setBookingModal(prev => ({...prev, slot: { fullDate: day.fullDate, displayDate: day.shortDate, time } })); setOpenDropdown(null); }}
+                                  className={`p-2.5 rounded-lg border text-center cursor-pointer active:scale-95 transition-all font-bold ${t.cardBorder} hover:bg-black/5 ${
+                                    bookingModal.slot?.fullDate === day.fullDate && bookingModal.slot?.time === time
+                                      ? `${t.accentBg} ${t.accentText} border-current`
+                                      : t.cardTextMain
+                                  }`}
+                                >
+                                  {time}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )) : (
+                          <div className={`p-5 text-center font-medium ${t.cardTextSub}`}>{d.noSlots}</div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                 </div>
@@ -1246,6 +1475,11 @@ export default function App() {
 
         @keyframes slideUp {
           from { transform: translateY(10%); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideDown {
+          from { transform: translateY(-10px); opacity: 0; }
           to { transform: translateY(0); opacity: 1; }
         }
       `}} />
