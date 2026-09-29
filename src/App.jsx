@@ -3,24 +3,12 @@ import {
   Calendar, Clock, MapPin, Sparkles, Copy, Check, 
   Phone, Send, X, ChevronDown, CreditCard, 
   Info, ShieldAlert, Star, Palette, QrCode, UserPlus, 
-  Smartphone
+  Smartphone, ExternalLink
 } from 'lucide-react';
 
 function Instagram({ size = 24, className = '', ...props }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
       <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
       <circle cx="12" cy="12" r="5" />
       <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
@@ -43,7 +31,6 @@ const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWGAIKH
 const formatPhone = (val) => {
   let v = val.replace(/\D/g, '');
   if (!v) return '';
-
   if (v.startsWith('7')) {
     let res = '7';
     if (v.length > 1) res += ` (${v.substring(1, 4)}`;
@@ -52,14 +39,12 @@ const formatPhone = (val) => {
     if (v.length > 9) res += `-${v.substring(9, 11)}`;
     return res;
   }
-  
   if (v.startsWith('374')) {
     let res = '374';
     if (v.length > 3) res += ` (${v.substring(3, 5)}`;
     if (v.length > 5) res += `) ${v.substring(5, 11)}`;
     return res;
   }
-  
   if (v.length <= 2) return v;
   if (v.startsWith('3') || v.startsWith('4') || v.startsWith('8') || v.startsWith('9')) {
      let res = v.substring(0, 2);
@@ -68,7 +53,6 @@ const formatPhone = (val) => {
      if (v.length > 8) res += `-${v.substring(8, 14)}`;
      return res;
   }
-  
   let res = v.substring(0, 3);
   if (v.length > 3) res += ` (${v.substring(3, 6)}`;
   if (v.length > 6) res += `) ${v.substring(6, 10)}`;
@@ -88,6 +72,7 @@ const DICT = {
     priceList: "Գնացուցակ",
     paymentDetails: "Վճարման տվյալներ",
     rules: "Ընդունելության կանոններ",
+    leaveReview: "Թողնել կարծիք",
     contactMe: "Կապվել ինձ հետ",
     rights: "Բոլոր իրավունքները պաշտպանված են:",
     addToContacts: "Պահպանել կոնտակտներում",
@@ -117,6 +102,7 @@ const DICT = {
     noSlots: "Այս պահին ազատ պատուհաններ չկան կամ վարպետը արձակուրդում է 🌴 Մոտ օրերս նոր պատուհաններ կավելանան:",
     upcomingVacation: "Շուտով արձակուրդ է 🌴 Հասցրեք գրանցվել մնացած ազատ օրերին!",
     upcomingVacationDates: (start, end) => `Շուտով արձակուրդ է 🌴 (${start} - ${end}): Հասցրեք գրանցվել վերջին ազատ օրերին!`,
+    maxServices: "Կարող եք ընտրել առավելագույնը 2 ծառայություն",
     s_manicure: "Մատնահարդարում",
     s_pedicure: "Պեդիկյուր",
     s_design: "Դիզայն և խնամք",
@@ -125,11 +111,14 @@ const DICT = {
     pol1: "Կանխավճար 2000 AMD ժամանակը ֆիքսելու համար:",
     pol2: "Ավելի քան 15 րոպե ուշացում = գրանցման չեղարկում:",
     pol3: "Խնդրում ենք գալ առանց ուղեկցողների:",
-    pol4: "Ծածկույթի երաշխիք — 5 օր:"
+    pol4: "Ծածկույթի երաշխիք — 5 օր:",
+    maps: "Քարտեզներ",
+    consent: "Սեղմելով կոճակը՝ դուք համաձայնվում եք անձնական տվյալների մշակմանը:",
+    slotsOpenLater: "Նոր պատուհաններ կավելանան ավելի ուշ:"
   },
   ru: {
     spec: "Nail & Aesthetic Master",
-    location: "Эчмиадзин",
+    location: "г. Эчмиадзин, ул. Маштоца, 48",
     status: "Прием по записи",
     bookOnline: "Записаться онлайн",
     availableSlots: "Свободные окна",
@@ -138,6 +127,7 @@ const DICT = {
     priceList: "Прайс-лист",
     paymentDetails: "Реквизиты для оплаты",
     rules: "Правила приема",
+    leaveReview: "Оставить отзыв",
     contactMe: "Связаться со мной",
     rights: "Все права защищены.",
     addToContacts: "Добавить в контакты",
@@ -145,7 +135,7 @@ const DICT = {
     installApp: "Установить приложение (PWA)",
     scanQr: "Сканируйте для быстрого доступа",
     bookingTitle: "Оформление записи",
-    service: "Услуга",
+    service: "Услуга (до 2-х)",
     time: "Время",
     yourName: "Ваше Имя",
     namePlaceholder: "Например, Анна",
@@ -167,6 +157,7 @@ const DICT = {
     noSlots: "Свободных окон пока нет или мастер в отпуске 🌴 Окошки скоро появятся.",
     upcomingVacation: "Скоро отпуск 🌴 Успейте занять последние свободные окна!",
     upcomingVacationDates: (start, end) => `Скоро отпуск 🌴 (${start} - ${end}). Успейте занять последние окна!`,
+    maxServices: "Можно выбрать максимум 2 услуги",
     s_manicure: "Маникюр",
     s_pedicure: "Педикюр",
     s_design: "Дизайн & Уход",
@@ -175,15 +166,73 @@ const DICT = {
     pol1: "Предоплата 2000 AMD для фиксации времени.",
     pol2: "Опоздание более 15 минут = отмена записи (предоплата не возвращается).",
     pol3: "Приходите, пожалуйста, без сопровождающих.",
-    pol4: "Гарантия на покрытие — 5 дней."
+    pol4: "Гарантия на покрытие — 5 дней.",
+    maps: "Карты",
+    consent: "Нажимая кнопку, вы даете согласие на обработку персональных данных.",
+    slotsOpenLater: "Окошки откроются позже."
+  },
+  en: {
+    spec: "Nail & Aesthetic Master",
+    location: "Echmiadzin",
+    status: "By appointment",
+    bookOnline: "Book Online",
+    availableSlots: "Available Slots",
+    nearestWindows: "Nearest available slots:",
+    availableDatesInfo: "Exact time and service are selected during booking.",
+    priceList: "Price List",
+    paymentDetails: "Payment Details",
+    rules: "Booking Rules",
+    leaveReview: "Leave a Review",
+    contactMe: "Contact Me",
+    rights: "All rights reserved.",
+    addToContacts: "Save Contact",
+    showQr: "Show QR Code",
+    installApp: "Install App (PWA)",
+    scanQr: "Scan for quick access",
+    bookingTitle: "Book Appointment",
+    service: "Service (up to 2)",
+    time: "Time",
+    yourName: "Your Name",
+    namePlaceholder: "e.g., Anna",
+    phoneNum: "Phone Number",
+    phonePlaceholder: "374 (99) 123456",
+    commentLabel: "Comment (optional)",
+    commentPlaceholder: "Preferences, questions...",
+    waCheckbox: "WhatsApp on the same number",
+    waLabel: "WhatsApp Number",
+    waPlaceholder: "374 (99) 123456",
+    confirmBooking: "Confirm Booking",
+    sending: "Sending...",
+    successTitle: "Request Sent!",
+    successText: "Thank you! I will contact you shortly to confirm the appointment.",
+    copied: "Copied!",
+    copyError: "Copy error",
+    installHint: 'Tap "Share" and select "Add to Home Screen"',
+    loadingSlots: "Syncing schedule...",
+    noSlots: "No available slots at the moment or the master is on vacation 🌴 New slots will appear soon.",
+    upcomingVacation: "Upcoming vacation 🌴 Book the last available slots!",
+    upcomingVacationDates: (start, end) => `Upcoming vacation 🌴 (${start} - ${end}): Book the last slots!`,
+    maxServices: "You can select a maximum of 2 services",
+    s_manicure: "Manicure",
+    s_pedicure: "Pedicure",
+    s_design: "Design & Care",
+    today: "Today",
+    tomorrow: "Tomorrow",
+    pol1: "A 2000 AMD deposit is required to secure your time.",
+    pol2: "Being more than 15 minutes late = cancellation.",
+    pol3: "Please come without companions.",
+    pol4: "Coverage guarantee — 5 days.",
+    maps: "Maps",
+    consent: "By clicking the button, you consent to the processing of personal data.",
+    slotsOpenLater: "Slots will open later."
   }
 };
 
 const getMockData = (lang) => ({
   master: {
-    name: lang === 'hy' ? "Անի Սարգսյան" : "Ани Саркисян",
+    name: lang === 'hy' ? "Անի Սարգսյան" : (lang === 'en' ? "Ani Sargsyan" : "Ани Саркисян"),
     specialization: DICT[lang].spec,
-    location: lang === 'hy' ? "Էջմիածին, Մաշտոցի փող., 48" : "г. Эчмиадзин, ул. Маштоца, 48",
+    location: lang === 'hy' ? "Էջմիածին, Մաշտոցի փող., 48" : (lang === 'en' ? "Echmiadzin, Mashtots st., 48" : "г. Эчмиадзин, ул. Маштоца, 48"),
     mapUrl: "https://www.google.com/maps/search/?api=1&query=Эчмиадзин+Маштоца+48",
     avatar: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80",
     status: DICT[lang].status
@@ -192,50 +241,50 @@ const getMockData = (lang) => ({
     {
       id: "s1",
       category: DICT[lang].s_manicure,
-      name: lang === 'hy' ? "Ապարատային մատնահարդարում + Գել-լաք" : "Аппаратный маникюр + Гель-лак",
-      duration: lang === 'hy' ? "1.5 - 2 ժամ" : "1.5 - 2 часа",
+      name: lang === 'hy' ? "Ապարատային մատնահարդարում + Գել-լաք" : (lang === 'en' ? "Hardware Manicure + Gel Polish" : "Аппаратный маникюр + Гель-лак"),
+      duration: lang === 'hy' ? "1.5 - 2 ժամ" : (lang === 'en' ? "1.5 - 2 hours" : "1.5 - 2 часа"),
       price: 8000,
-      description: lang === 'hy' ? "Հեռացում, համակցված մատնահարդարում, եղունգի թիթեղի հարթեցում և մեկ գույնով ծածկում:" : "Снятие, комбинированный маникюр, выравнивание ногтевой пластины и покрытие в один тон."
+      description: lang === 'hy' ? "Հեռացում, համակցված մատնահարդարում, եղունգի թիթեղի հարթեցում և մեկ գույնով ծածկում:" : (lang === 'en' ? "Removal, combined manicure, nail plate leveling, and solid color coating." : "Снятие, комбинированный маникюр, выравнивание ногтевой пластины и покрытие в один тон.")
     },
     {
       id: "s2",
       category: DICT[lang].s_manicure,
-      name: lang === 'hy' ? "Եղունգների երկարացում" : "Наращивание ногтей",
-      duration: lang === 'hy' ? "2.5 - 3 ժամ" : "2.5 - 3 часа",
+      name: lang === 'hy' ? "Եղունգների երկարացում" : (lang === 'en' ? "Nail Extension" : "Наращивание ногтей"),
+      duration: lang === 'hy' ? "2.5 - 3 ժամ" : (lang === 'en' ? "2.5 - 3 hours" : "2.5 - 3 часа"),
       price: 13000,
-      description: lang === 'hy' ? "Եղունգների մոդելավորում պոլիգելով/գելով, ապարատային մատնահարդարում, գել-լաքի ծածկույթ:" : "Моделирование ногтей полигелем/гелем, аппаратный маникюр, покрытие гель-лаком."
+      description: lang === 'hy' ? "Եղունգների մոդելավորում պոլիգելով/գելով, ապարատային մատնահարդարում, գել-լաքի ծածկույթ:" : (lang === 'en' ? "Nail modeling with polygel/gel, hardware manicure, gel polish coating." : "Моделирование ногтей полигелем/гелем, аппаратный маникюр, покрытие гель-лаком.")
     },
     {
       id: "s3",
       category: DICT[lang].s_pedicure,
-      name: lang === 'hy' ? "Smart-պեդիկյուր ծածկույթով" : "Smart-педикюр с покрытием",
-      duration: lang === 'hy' ? "1.5 ժամ" : "1.5 часа",
+      name: lang === 'hy' ? "Smart-պեդիկյուր ծածկույթով" : (lang === 'en' ? "Smart Pedicure with Coating" : "Smart-педикюр с покрытием"),
+      duration: lang === 'hy' ? "1.5 ժամ" : (lang === 'en' ? "1.5 hours" : "1.5 часа"),
       price: 10000,
-      description: lang === 'hy' ? "Ոտնաթաթի ամբողջական մշակում սկավառակներով, մատների մշակում և գել-լաքի ծածկույթ:" : "Полная обработка стопы дисками, обработка пальчиков и покрытие гель-лаком."
+      description: lang === 'hy' ? "Ոտնաթաթի ամբողջական մշակում սկավառակներով, մատների մշակում և գել-լաքի ծածկույթ:" : (lang === 'en' ? "Full foot treatment with discs, toe treatment, and gel polish coating." : "Полная обработка стопы дисками, обработка пальчиков и покрытие гель-лаком.")
     },
     {
       id: "s4",
       category: DICT[lang].s_pedicure,
-      name: lang === 'hy' ? "Էքսպրես պեդիկյուր" : "Экспресс-педикюр",
-      duration: lang === 'hy' ? "1 ժամ" : "1 час",
+      name: lang === 'hy' ? "Էքսպրես պեդիկյուր" : (lang === 'en' ? "Express Pedicure" : "Экспресс-педикюр"),
+      duration: lang === 'hy' ? "1 ժամ" : (lang === 'en' ? "1 hour" : "1 час"),
       price: 7000,
-      description: lang === 'hy' ? "Միայն մատների մշակում (առանց ոտնաթաթի) + գել-լաքի ծածկույթ:" : "Обработка только пальчиков (без стопы) + покрытие гель-лаком."
+      description: lang === 'hy' ? "Միայն մատների մշակում (առանց ոտնաթաթի) + գել-լաքի ծածկույթ:" : (lang === 'en' ? "Toe treatment only (without foot) + gel polish coating." : "Обработка только пальчиков (без стопы) + покрытие гель-лаком.")
     },
     {
       id: "s5",
       category: DICT[lang].s_design,
-      name: lang === 'hy' ? "Ֆրենչ / Լուսնային դիզայն" : "Френч / Лунный дизайн",
-      duration: "+ 30 րոպե",
+      name: lang === 'hy' ? "Ֆրենչ / Լուսնային դիզայն" : (lang === 'en' ? "French / Moon Design" : "Френч / Лунный дизайн"),
+      duration: lang === 'en' ? "+ 30 mins" : (lang === 'hy' ? "+ 30 րոպե" : "+ 30 минут"),
       price: 2000,
-      description: lang === 'hy' ? "Դասական կամ գունավոր ֆրենչ բոլոր մատների վրա:" : "Классический или цветной френч на все пальцы."
+      description: lang === 'hy' ? "Դասական կամ գունավոր ֆրենչ բոլոր մատների վրա:" : (lang === 'en' ? "Classic or colored French on all fingers." : "Классический или цветной френч на все пальцы.")
     },
     {
       id: "s6",
       category: DICT[lang].s_design,
-      name: lang === 'hy' ? "Ամրացում ակրիլային փոշով" : "Укрепление акриловой пудрой",
-      duration: "+ 15 րոպե",
+      name: lang === 'hy' ? "Ամրացում ակրիլային փոշով" : (lang === 'en' ? "Acrylic Powder Strengthening" : "Укрепление акриловой пудрой"),
+      duration: lang === 'en' ? "+ 15 mins" : (lang === 'hy' ? "+ 15 րոպե" : "+ 15 минут"),
       price: 1000,
-      description: lang === 'hy' ? "Լրացուցիչ ամրացում բարակ և փխրուն եղունգների համար:" : "Дополнительное укрепление для тонких и ломких ногтей."
+      description: lang === 'hy' ? "Լրացուցիչ ամրացում բարակ և փխրուն եղունգների համար:" : (lang === 'en' ? "Additional strengthening for thin and brittle nails." : "Дополнительное укрепление для тонких и ломких ногтей.")
     }
   ],
   payments: [
@@ -284,8 +333,6 @@ const THEMES = {
     inputBorder: "border-transparent focus-within:border-[#D4AF37]",
     inputFocusRing: "focus-within:ring-[#D4AF37]/30",
     inputText: "text-[#F4E8C1]",
-    toastBg: "bg-[#2A2A30]",
-    toastText: "text-[#F4E8C1]",
     successIcon: "text-emerald-400",
     successBg: "bg-emerald-400/10",
     statusDotBg: "bg-emerald-400",
@@ -325,55 +372,12 @@ const THEMES = {
     inputBorder: "border-transparent focus-within:border-[#5EEAD4]",
     inputFocusRing: "focus-within:ring-[#5EEAD4]/30",
     inputText: "text-[#F1F5F9]",
-    toastBg: "bg-[#1F4538]",
-    toastText: "text-[#F1F5F9]",
     successIcon: "text-[#5EEAD4]",
     successBg: "bg-[#5EEAD4]/10",
     statusDotBg: "bg-[#5EEAD4]",
     cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.3)]",
     pillBg: "bg-white/5",
     skeletonBg: "bg-white/5",
-  },
-  espresso: {
-    appBg: "bg-[#F5F0EB]",
-    appTextMain: "text-[#2C221E]",
-    appTextSub: "text-[#2C221E]/70",
-    headerBg: "bg-[#F5F0EB]",
-    avatarBorder: "border-[#F5F0EB]",
-    glow: "bg-[#C5A059]/15",
-    cardBg: "bg-[#2C221E]",
-    cardBorder: "border-[#4A3B32]",
-    cardTextMain: "text-[#F5F0EB]",
-    cardTextSub: "text-[#F5F0EB]/70",
-    btnPrimary: "bg-[#C5A059] text-white shadow-[#C5A059]/20",
-    accentText: "text-[#C5A059]",
-    accentBg: "bg-[#C5A059]/15",
-    badgeBg: "bg-[#2C221E]/10",
-    badgeText: "text-[#2C221E]",
-    statusBadgeBg: "bg-[#C5A059]/15",
-    statusBadgeText: "text-[#C5A059]",
-    tabActive: "bg-[#2C221E] text-white",
-    tabInactive: "bg-transparent text-[#2C221E]/70 border-[#D9D1C7]",
-    btnSecondary: "bg-[#4A3B32] text-[#F5F0EB] hover:bg-[#5C4A40]",
-    iconWrapper: "bg-[#4A3B32] text-[#C5A059]",
-    policyBg: "bg-[#2C221E]",
-    bullet: "bg-[#C5A059]",
-    footerBg: "bg-[#F5F0EB]",
-    footerBorder: "border-[#D9D1C7]",
-    modalBg: "bg-[#2C221E]",
-    grabber: "bg-[#4A3B32]",
-    inputBg: "bg-[#4A3B32] focus-within:bg-[#3D2E26]",
-    inputBorder: "border-transparent focus-within:border-[#C5A059]",
-    inputFocusRing: "focus-within:ring-[#C5A059]/30",
-    inputText: "text-[#F5F0EB]",
-    toastBg: "bg-[#2C221E]",
-    toastText: "text-[#F5F0EB]",
-    successIcon: "text-[#C5A059]",
-    successBg: "bg-[#C5A059]/15",
-    statusDotBg: "bg-[#C5A059]",
-    cardShadow: "shadow-[0_4px_20px_-8px_rgba(44,34,30,0.15)]",
-    pillBg: "bg-black/5",
-    skeletonBg: "bg-[#4A3B32]/50",
   },
   rose: {
     appBg: "bg-[#FCF7F8]",
@@ -407,8 +411,6 @@ const THEMES = {
     inputBorder: "border-transparent focus-within:border-[#F2A4B3]",
     inputFocusRing: "focus-within:ring-[#F2A4B3]/30",
     inputText: "text-[#5C3A41]",
-    toastBg: "bg-[#5C3A41]",
-    toastText: "text-white",
     successIcon: "text-[#E07A8F]",
     successBg: "bg-[#F2A4B3]/20",
     statusDotBg: "bg-[#E07A8F]",
@@ -448,8 +450,6 @@ const THEMES = {
     inputBorder: "border-transparent focus-within:border-[#B3A4F2]",
     inputFocusRing: "focus-within:ring-[#B3A4F2]/30",
     inputText: "text-[#3D3B4A]",
-    toastBg: "bg-[#3D3B4A]",
-    toastText: "text-white",
     successIcon: "text-[#8E79DF]",
     successBg: "bg-[#B3A4F2]/20",
     statusDotBg: "bg-[#8E79DF]",
@@ -489,8 +489,6 @@ const THEMES = {
     inputBorder: "border-transparent focus-within:border-white/50",
     inputFocusRing: "focus-within:ring-white/20",
     inputText: "text-[#EAEAEA]",
-    toastBg: "bg-[#2A2A2A]",
-    toastText: "text-[#EAEAEA]",
     successIcon: "text-white",
     successBg: "bg-white/20",
     statusDotBg: "bg-white",
@@ -530,8 +528,6 @@ const THEMES = {
     inputBorder: "border-transparent focus-within:border-[#D97736]",
     inputFocusRing: "focus-within:ring-[#D97736]/30",
     inputText: "text-[#F3E6D9]",
-    toastBg: "bg-[#2D1F1A]",
-    toastText: "text-[#F3E6D9]",
     successIcon: "text-[#D97736]",
     successBg: "bg-[#D97736]/15",
     statusDotBg: "bg-[#D97736]",
@@ -546,20 +542,21 @@ const THEME_OPTIONS = [
   { id: 'carbon', color: '#111111', border: '#FFFFFF' },
   { id: 'cognac', color: '#140D0B', border: '#D97736' },
   { id: 'emerald', color: '#0B1D17', border: '#5EEAD4' },
-  { id: 'espresso', color: '#F5F0EB', border: '#C5A059' },
   { id: 'rose', color: '#FCF7F8', border: '#F2A4B3' },
   { id: 'lavender', color: '#F9F9FE', border: '#B3A4F2' }
 ];
 
-const Toast = ({ message, isVisible, t }) => (
+const Toast = ({ message, isVisible }) => (
   <div 
-    className={`fixed left-1/2 -translate-x-1/2 z-[110] px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2 transition-all duration-300 ${t.toastBg} ${t.toastText} ${
-      isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8 pointer-events-none'
+    className={`fixed left-1/2 -translate-x-1/2 z-[200] px-5 py-3.5 rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.5)] flex items-center gap-3 transition-all duration-400 ease-out border-2 bg-zinc-900 text-white border-zinc-700 ${
+      isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-12 scale-90 pointer-events-none'
     }`}
     style={{ top: 'calc(1.5rem + env(safe-area-inset-top))' }}
   >
-    <Check size={18} className={t.successIcon} />
-    <span className="text-sm font-medium whitespace-nowrap">{message}</span>
+    <div className="bg-emerald-500 rounded-full p-1 text-black flex-shrink-0 flex items-center justify-center">
+      <Check size={14} strokeWidth={4} />
+    </div>
+    <span className="text-sm font-bold whitespace-nowrap tracking-wide">{message}</span>
   </div>
 );
 
@@ -584,13 +581,14 @@ const parseSheetDate = (dateStr, lang) => {
 
   const monthsRu = ["Янв", "Фев", "Мар", "Апр", "Мая", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
   const monthsHy = ["Հնվ", "Փտվ", "Մար", "Ապր", "Մայ", "Հնս", "Հլս", "Օգս", "Սեպ", "Հոկ", "Նոյ", "Դեկ"];
-  const shortDate = `${parseInt(d)} ${lang === 'ru' ? monthsRu[dateObj.getMonth()] : monthsHy[dateObj.getMonth()]}`;
+  const monthsEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const shortDate = `${parseInt(d)} ${lang === 'ru' ? monthsRu[dateObj.getMonth()] : (lang === 'en' ? monthsEn[dateObj.getMonth()] : monthsHy[dateObj.getMonth()])}`;
 
   return { shortDate, label, fullDate: dateStr };
 };
 
 export default function App() {
-  const [lang, setLang] = useState('hy'); 
+  const [lang, setLang] = useState('ru'); 
   const d = DICT[lang]; 
   const data = getMockData(lang); 
 
@@ -610,12 +608,14 @@ export default function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('app-theme') || 'obsidian';
+    let saved = localStorage.getItem('app-theme');
+    if (saved === 'nude' || !THEMES[saved]) saved = 'obsidian';
+    return saved;
   });
 
   const [bookingModal, setBookingModal] = useState({
     isOpen: false,
-    service: null,
+    services: [], // Array for multiple services
     slot: null,
   });
 
@@ -642,42 +642,51 @@ export default function App() {
     localStorage.setItem('app-theme', theme);
   }, [theme]);
 
-  useEffect(() => {
-    setActiveCategory(data.services[0].category);
-  }, [lang]);
+  const t = THEMES[theme] || THEMES['obsidian'];
 
-  // Слушатель скролла для плавающей кнопки (FAB)
+  useEffect(() => {
+    // ЖЕСТКАЯ БЛОКИРОВКА СКРОЛЛ-БАУНСА (Прыжков) И ФОНА
+    const bgTopColor = t.appBg.replace('bg-[', '').replace(']', '');
+    const bgBottomColor = t.footerBg.replace('bg-[', '').replace(']', '');
+    
+    document.documentElement.style.backgroundColor = bgTopColor;
+    // Устанавливаем body в цвет футера, чтобы при оттяжке снизу не было черной полосы
+    document.body.style.backgroundColor = bgBottomColor;
+    
+    document.documentElement.style.overscrollBehavior = 'none';
+    document.body.style.overscrollBehavior = 'none';
+  }, [t.appBg, t.footerBg]);
+
   useEffect(() => {
     const handleScroll = () => {
-      setShowFab(window.scrollY > 250);
+      // Кнопка появляется чуть раньше
+      setShowFab(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
     if (isFetched) return;
-    
     const fetchSlots = async () => {
       setIsLoadingDates(true);
       try {
         const res = await fetch(GOOGLE_APPS_SCRIPT_URL);
         const fetchedData = await res.json();
-        
         if (Array.isArray(fetchedData) && fetchedData.length > 0) {
           setRawDates(fetchedData);
         } else {
           setRawDates([]);
         }
       } catch (error) {
-        console.error("Ошибка при загрузке расписания:", error);
+        console.error("Ошибка загрузки:", error);
         setRawDates([]);
       } finally {
         setIsLoadingDates(false);
         setIsFetched(true);
       }
     };
-
     fetchSlots();
   }, [isFetched]); 
 
@@ -709,28 +718,26 @@ export default function App() {
     return () => document.removeEventListener('click', close);
   }, [openDropdown]);
 
-  const t = THEMES[theme] || THEMES['obsidian'];
-
   const showToast = useCallback((message) => {
     setToast({ visible: true, message });
     setTimeout(() => setToast({ visible: false, message: "" }), 3000);
   }, []);
 
   const copyToClipboard = async (text, id = null) => {
+    const cleanText = text.replace(/\s/g, ''); 
     const onSuccess = () => {
       showToast(d.copied);
       if (id) {
         setCopiedPaymentId(id);
-        setTimeout(() => setCopiedPaymentId(null), 2000);
+        setTimeout(() => setCopiedPaymentId(current => current === id ? null : current), 2000);
       }
     };
-
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(cleanText);
       onSuccess();
     } catch (err) {
       const textArea = document.createElement("textarea");
-      textArea.value = text;
+      textArea.value = cleanText;
       document.body.appendChild(textArea);
       textArea.select();
       try {
@@ -770,7 +777,6 @@ export default function App() {
 
   const openBooking = () => {
     const defaultService = data.services[0];
-    
     let defaultSlot = null;
     if (availableDates.length > 0) {
       defaultSlot = {
@@ -779,10 +785,10 @@ export default function App() {
         time: availableDates[0].times[0]
       };
     }
-
-    setBookingModal({ isOpen: true, service: defaultService, slot: defaultSlot });
+    setBookingModal({ isOpen: true, services: [defaultService], slot: defaultSlot });
     setFormState({ name: "", phone: "", whatsapp: "", sameAsPhone: true, comment: "", isSubmitting: false, isSuccess: false });
     
+    // Жесткая блокировка фона
     const scrollY = window.scrollY;
     document.body.style.position = 'fixed';
     document.body.style.top = `-${scrollY}px`;
@@ -790,9 +796,10 @@ export default function App() {
   };
 
   const closeBooking = () => {
-    setBookingModal({ isOpen: false, service: null, slot: null });
+    setBookingModal({ isOpen: false, services: [], slot: null });
     setOpenDropdown(null);
     
+    // Разблокировка фона
     const scrollY = document.body.style.top;
     document.body.style.position = '';
     document.body.style.top = '';
@@ -803,16 +810,15 @@ export default function App() {
   const handleBookingSubmit = (e) => {
     e.preventDefault();
     setFormState(prev => ({ ...prev, isSubmitting: true }));
-
     const cleanPhone = `+${formState.phone.replace(/\D/g, '')}`;
     const cleanWa = formState.sameAsPhone ? cleanPhone : (formState.whatsapp ? `+${formState.whatsapp.replace(/\D/g, '')}` : '');
-
+    const combinedServices = bookingModal.services.map(s => s.name).join(' + ');
     const payload = {
       name: formState.name,
       phone: cleanPhone, 
       whatsapp: cleanWa,
       comment: formState.comment,
-      service: bookingModal.service?.name,
+      service: combinedServices,
       slot: `${bookingModal.slot.fullDate} ${bookingModal.slot.time}`,
       timestamp: new Date().toISOString()
     };
@@ -828,7 +834,6 @@ export default function App() {
 
     setTimeout(() => {
       setFormState(prev => ({ ...prev, isSubmitting: false, isSuccess: true }));
-      
       if (bookingModal.slot) {
          setAvailableDates(prevDates => {
             const newDates = [...prevDates];
@@ -839,7 +844,6 @@ export default function App() {
             return newDates.filter(day => day.times.length > 0);
          });
       }
-
       setTimeout(closeBooking, 3000);
     }, 400);
   };
@@ -862,38 +866,26 @@ export default function App() {
   const filteredServices = data.services.filter(s => s.category === activeCategory);
 
   return (
-    <div className={`app-wrapper font-sans selection:bg-rose-200 antialiased flex flex-col relative transition-colors duration-300 min-h-[100dvh] w-full overflow-x-hidden pb-28 ${t.appBg} ${t.appTextMain}`}>
-      
-      <Toast message={toast.message} isVisible={toast.visible} t={t} />
+    <div className={`app-wrapper font-sans selection:bg-rose-200 antialiased flex flex-col relative transition-colors duration-300 min-h-[100dvh] w-full overflow-x-hidden ${t.appBg} ${t.appTextMain}`}>
+      <Toast message={toast.message} isVisible={toast.visible} />
 
+      {/* Language Switcher */}
       <div 
-        className={`absolute z-[90] flex items-center p-1 rounded-full backdrop-blur-md shadow-sm transition-colors duration-300 ${t.pillBg}`}
-        style={{ top: 'calc(1rem + env(safe-area-inset-top))', left: '50%', transform: 'translateX(-50%)' }}
+        className={`absolute z-[80] flex items-center p-1 rounded-full backdrop-blur-md shadow-sm transition-colors duration-300 ${t.pillBg}`}
+        style={{ top: 'calc(1rem + env(safe-area-inset-top))', right: '1.25rem' }}
       >
-        <button 
-          onClick={() => setLang('hy')} 
-          className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-300 ${lang === 'hy' ? t.tabActive : 'text-current opacity-60 hover:opacity-100 bg-transparent'}`}
-        >
-          ՀԱՅ
-        </button>
-        <button 
-          onClick={() => setLang('ru')} 
-          className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-300 ${lang === 'ru' ? t.tabActive : 'text-current opacity-60 hover:opacity-100 bg-transparent'}`}
-        >
-          РУС
-        </button>
+        <button onClick={() => setLang('hy')} className={`px-3 py-1.5 text-[10px] sm:text-xs font-bold rounded-full transition-all duration-300 ${lang === 'hy' ? t.tabActive : 'text-current opacity-60 hover:opacity-100 bg-transparent'}`}>ՀԱՅ</button>
+        <button onClick={() => setLang('ru')} className={`px-3 py-1.5 text-[10px] sm:text-xs font-bold rounded-full transition-all duration-300 ${lang === 'ru' ? t.tabActive : 'text-current opacity-60 hover:opacity-100 bg-transparent'}`}>РУС</button>
+        <button onClick={() => setLang('en')} className={`px-3 py-1.5 text-[10px] sm:text-xs font-bold rounded-full transition-all duration-300 ${lang === 'en' ? t.tabActive : 'text-current opacity-60 hover:opacity-100 bg-transparent'}`}>ENG</button>
       </div>
 
+      {/* Header */}
       <header className={`relative pt-20 pb-8 px-5 overflow-hidden flex flex-col items-center text-center rounded-b-[2.5rem] shadow-[0_4px_40px_-15px_rgba(0,0,0,0.05)] w-full transition-colors duration-300 ${t.headerBg}`}>
         <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-48 rounded-[100%] blur-3xl -z-10 transition-colors duration-700 ${t.glow}`} />
         
         <div className="relative mb-5">
           <div className={`absolute inset-0 rounded-full blur-md opacity-60 animate-pulse transition-colors duration-700 ${t.glow.replace('/20', '/80').replace('/15', '/80').replace('/10', '/80')}`} />
-          <img 
-            src={data.master.avatar} 
-            alt={data.master.name} 
-            className={`relative w-28 h-28 object-cover rounded-full border-4 shadow-lg object-top transition-colors duration-300 ${t.avatarBorder}`}
-          />
+          <img src={data.master.avatar} alt={data.master.name} className={`relative w-28 h-28 object-cover rounded-full border-4 shadow-lg object-top transition-colors duration-300 ${t.avatarBorder}`} />
           <div className={`absolute -bottom-1 -right-1 p-1.5 rounded-full shadow-sm transition-colors duration-300 ${t.headerBg}`}>
             <span className={`flex items-center justify-center w-5 h-5 rounded-full relative z-10 bg-emerald-500`}>
               <span className={`w-2.5 h-2.5 rounded-full animate-ping absolute opacity-75 bg-emerald-300`} />
@@ -906,35 +898,29 @@ export default function App() {
         <p className={`font-medium mb-4 transition-colors duration-300 ${t.appTextSub}`}>{data.master.specialization}</p>
 
         <div className="flex flex-wrap justify-center gap-2 mb-6">
-          <a 
-            href={data.master.mapUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full backdrop-blur-sm transition-all duration-300 active:scale-95 hover:opacity-80 shadow-sm ${t.badgeBg} ${t.badgeText}`}
-          >
-            <MapPin size={14} className="opacity-70" />
+          {/* Интерактивная ссылка на карту */}
+          <a href={data.master.mapUrl} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-full backdrop-blur-sm transition-all duration-300 active:scale-95 shadow-md border hover:scale-105 ${t.badgeBg} ${t.badgeText} border-current/20`}>
+            <MapPin size={16} />
             {data.master.location}
+            <ExternalLink size={14} className="ml-0.5 opacity-60" />
           </a>
-          <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full transition-colors duration-300 ${t.statusBadgeBg} ${t.statusBadgeText}`}>
+          <span className={`inline-flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-full transition-colors duration-300 ${t.statusBadgeBg} ${t.statusBadgeText}`}>
             {data.master.status}
           </span>
         </div>
 
-        <button 
-          onClick={openBooking}
-          className={`w-full max-w-xs py-4 px-6 rounded-[2rem] font-bold text-lg shadow-[0_8px_30px_-10px_rgba(0,0,0,0.3)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 mx-auto ${t.btnPrimary}`}
-        >
+        <button onClick={openBooking} className={`w-full max-w-xs py-4 px-6 rounded-[2rem] font-bold text-lg shadow-[0_8px_30px_-10px_rgba(0,0,0,0.3)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 mx-auto ${t.btnPrimary}`}>
           <Calendar size={20} />
           {d.bookOnline}
         </button>
       </header>
 
+      {/* Main Content */}
       <main className="px-5 mt-8 w-full max-w-md mx-auto space-y-10 flex-1 relative z-10">
         
         {/* Информационный блок: Свободные окна */}
         <section>
           <SectionTitle title={d.availableSlots} icon={Sparkles} t={t} />
-          
           {isLoadingDates ? (
             <div className={`w-full p-6 rounded-3xl border flex flex-col items-center gap-4 transition-colors duration-300 ${t.cardBg} ${t.cardBorder}`}>
               <div className={`w-10 h-10 rounded-full animate-spin border-4 border-t-transparent ${t.accentText.replace('text-', 'border-')}`} style={{borderTopColor: 'transparent'}} />
@@ -946,9 +932,7 @@ export default function App() {
                 <Calendar size={28} />
               </div>
               <p className={`text-sm font-medium leading-relaxed ${t.cardTextMain}`}>
-                {vacationDays.length > 0 
-                  ? `${bannerText} ${lang === 'ru' ? 'Окошки откроются позже.' : 'Նոր պատուհաններ կավելանան ավելի ուշ:'}` 
-                  : d.noSlots}
+                {vacationDays.length > 0 ? `${bannerText} ${d.slotsOpenLater}` : d.noSlots}
               </p>
             </div>
           ) : (
@@ -959,14 +943,11 @@ export default function App() {
                   <p className="text-sm font-medium leading-snug">{bannerText}</p>
                 </div>
               )}
-
               <div className={`w-full p-6 rounded-3xl border flex flex-col items-center justify-center text-center gap-4 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} shadow-sm`}>
                 <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-1 ${t.accentBg} ${t.accentText}`}>
                   <Calendar size={24} />
                 </div>
-                <p className={`text-base font-bold ${t.cardTextMain}`}>
-                  {d.nearestWindows}
-                </p>
+                <p className={`text-base font-bold ${t.cardTextMain}`}>{d.nearestWindows}</p>
                 <div className="flex flex-wrap justify-center gap-2 w-full">
                   {availableDates.map(day => (
                     <span key={day.id} className={`px-4 py-2.5 rounded-xl text-sm font-bold border shadow-sm transition-colors duration-300 ${t.tabInactive}`}>
@@ -982,42 +963,33 @@ export default function App() {
           )}
         </section>
 
-        {/* Прайс-лист как красивое меню без кнопок */}
+        {/* Прайс-лист (Без кнопок) */}
         <section>
           <SectionTitle title={d.priceList} icon={Star} t={t} />
-          
           <div className="flex gap-2 overflow-x-auto pt-3 pb-4 -mx-5 px-5 scrollbar-hide">
             {categories.map(category => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 className={`whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border ${
-                  activeCategory === category 
-                    ? `${t.tabActive} shadow-md border-transparent scale-105` 
-                    : `${t.tabInactive} scale-100`
+                  activeCategory === category ? `${t.tabActive} shadow-md border-transparent scale-105` : `${t.tabInactive} scale-100`
                 }`}
               >
                 {category}
               </button>
             ))}
           </div>
-
           <div className="space-y-4">
             {filteredServices.map(service => (
-              <div 
-                key={service.id} 
-                className={`rounded-3xl p-5 border transition-all duration-300 ${t.cardBg} ${t.cardBorder} ${t.cardShadow}`}
-              >
+              <div key={service.id} className={`rounded-3xl p-5 border transition-all duration-300 ${t.cardBg} ${t.cardBorder} ${t.cardShadow}`}>
                 <div className="flex justify-between items-start gap-4 mb-2">
                   <h3 className={`font-bold leading-tight transition-colors duration-300 ${t.cardTextMain}`}>{service.name}</h3>
                   <span className={`font-black whitespace-nowrap transition-colors duration-300 ${t.cardTextMain}`}>{service.price.toLocaleString('ru-RU')} AMD</span>
                 </div>
-                
                 <div className={`flex items-center gap-2 text-xs font-medium mb-3 transition-colors duration-300 ${t.cardTextSub}`}>
                   <Clock size={14} />
                   {service.duration}
                 </div>
-                
                 <p className={`text-sm leading-relaxed transition-colors duration-300 ${t.cardTextSub}`}>
                   {service.description}
                 </p>
@@ -1026,12 +998,17 @@ export default function App() {
           </div>
         </section>
 
+        {/* Реквизиты (Полностью кликабельная строка) */}
         <section>
           <SectionTitle title={d.paymentDetails} icon={CreditCard} t={t} />
           <div className={`rounded-3xl p-2 border flex flex-col gap-1 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} ${t.cardShadow}`}>
             {data.payments.map(payment => (
-              <div key={payment.id} className="flex items-center justify-between p-3 rounded-2xl transition-colors hover:opacity-80">
-                <div className="flex items-center gap-3">
+              <div 
+                key={payment.id} 
+                onClick={() => copyToClipboard(payment.number, payment.id)}
+                className="flex items-center justify-between p-3 rounded-2xl cursor-pointer transition-all duration-300 active:scale-95 hover:bg-black/5 dark:hover:bg-white/5"
+              >
+                <div className="flex items-center gap-3 pointer-events-none">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 ${t.iconWrapper}`}>
                     <payment.icon size={20} />
                   </div>
@@ -1040,10 +1017,7 @@ export default function App() {
                     <p className={`text-sm font-bold font-mono tracking-wide mt-0.5 transition-colors duration-300 ${t.cardTextMain}`}>{payment.number}</p>
                   </div>
                 </div>
-                <button 
-                  onClick={() => copyToClipboard(payment.number, payment.id)}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-all duration-300 ${t.cardTextSub} hover:${t.cardTextMain.split(' ')[0]}`}
-                >
+                <button className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 pointer-events-none ${t.cardTextSub}`}>
                   {copiedPaymentId === payment.id ? (
                     <Check size={18} className={`${t.successIcon} scale-110 transition-transform`} />
                   ) : (
@@ -1055,6 +1029,7 @@ export default function App() {
           </div>
         </section>
 
+        {/* Правила приема */}
         <section>
           <SectionTitle title={d.rules} icon={ShieldAlert} t={t} />
           <div className={`rounded-3xl p-5 border transition-colors duration-300 ${t.policyBg} ${t.cardBorder}`}>
@@ -1068,30 +1043,37 @@ export default function App() {
             </ul>
           </div>
         </section>
+
+        {/* Отзывы */}
+        <section>
+          <SectionTitle title={d.leaveReview} icon={Star} t={t} />
+          <div className={`rounded-3xl p-2 border flex gap-2 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} ${t.cardShadow}`}>
+            <a href="#" target="_blank" rel="noopener noreferrer" className={`flex-1 py-3.5 rounded-2xl flex flex-col items-center justify-center gap-1.5 transition-all duration-300 active:scale-95 hover:bg-black/5 dark:hover:bg-white/5`}>
+               <span className={`font-bold text-sm ${t.cardTextMain}`}>Google</span>
+               <span className={`text-[10px] font-medium opacity-60 ${t.cardTextSub}`}>{d.maps}</span>
+            </a>
+            <div className={`w-px bg-current opacity-10 my-2 ${t.cardBorder}`} />
+            <a href="#" target="_blank" rel="noopener noreferrer" className={`flex-1 py-3.5 rounded-2xl flex flex-col items-center justify-center gap-1.5 transition-all duration-300 active:scale-95 hover:bg-black/5 dark:hover:bg-white/5`}>
+               <span className={`font-bold text-sm ${t.cardTextMain}`}>Yandex</span>
+               <span className={`text-[10px] font-medium opacity-60 ${t.cardTextSub}`}>{d.maps}</span>
+            </a>
+          </div>
+        </section>
+
       </main>
 
-      <footer className={`mt-12 border-t py-10 px-5 flex flex-col items-center w-full transition-colors duration-300 relative z-10 pb-32 ${t.footerBg} ${t.footerBorder}`}>
+      {/* Footer */}
+      <footer className={`mt-12 border-t pt-10 pb-28 px-5 flex flex-col items-center w-full transition-colors duration-300 relative z-10 ${t.footerBg} ${t.footerBorder}`}>
         <div className="w-full max-w-xs space-y-3 mb-8">
-          <button 
-            onClick={() => setIsQrOpen(true)}
-            className={`w-full py-3.5 rounded-2xl font-semibold flex items-center justify-center gap-3 transition-all duration-300 active:scale-95 ${t.btnSecondary}`}
-          >
+          <button onClick={() => setIsQrOpen(true)} className={`w-full py-3.5 rounded-2xl font-semibold flex items-center justify-center gap-3 transition-all duration-300 active:scale-95 ${t.btnSecondary}`}>
             <QrCode size={18} />
             {d.showQr}
           </button>
-          
-          <button 
-            onClick={handleDownloadVCard}
-            className={`w-full py-3.5 rounded-2xl font-semibold flex items-center justify-center gap-3 transition-all duration-300 active:scale-95 ${t.btnSecondary}`}
-          >
+          <button onClick={handleDownloadVCard} className={`w-full py-3.5 rounded-2xl font-semibold flex items-center justify-center gap-3 transition-all duration-300 active:scale-95 ${t.btnSecondary}`}>
             <UserPlus size={18} />
             {d.addToContacts}
           </button>
-          
-          <button 
-            onClick={handleInstallPWA}
-            className={`w-full py-3.5 rounded-2xl font-semibold flex items-center justify-center gap-3 transition-all duration-300 active:scale-95 ${t.btnSecondary} border-2 ${t.inputBorder.replace('focus-within:', '')}`}
-          >
+          <button onClick={handleInstallPWA} className={`w-full py-3.5 rounded-2xl font-semibold flex items-center justify-center gap-3 transition-all duration-300 active:scale-95 ${t.btnSecondary} border-2 ${t.inputBorder.replace('focus-within:', '')}`}>
             <Smartphone size={18} />
             {d.installApp}
           </button>
@@ -1111,6 +1093,16 @@ export default function App() {
           </a>
         </div>
         <p className={`text-xs font-medium transition-colors duration-300 ${t.appTextSub}`}>© {new Date().getFullYear()} {data.master.name}. {d.rights}</p>
+        
+        {/* Author Signature */}
+        <a 
+          href="https://appseapro.com/" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className={`mt-4 text-[11px] font-medium opacity-15 hover:opacity-100 transition-opacity duration-300 ${t.appTextMain}`}
+        >
+          Design by Elena Sotnikova
+        </a>
       </footer>
 
       {/* Плавающая кнопка (FAB) и кнопка смены темы */}
@@ -1118,11 +1110,8 @@ export default function App() {
         <div className="w-full max-w-md px-5 flex items-end justify-between gap-4">
           
           {/* Кнопка записи (появляется при скролле) */}
-          <div className={`flex-1 transition-all duration-500 ease-out ${showFab ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
-            <button
-              onClick={openBooking}
-              className={`w-full py-4 rounded-2xl font-bold text-lg shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 ${t.btnPrimary}`}
-            >
+          <div className={`flex-1 transition-all duration-500 ease-out ${showFab ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-12 opacity-0 pointer-events-none'}`}>
+            <button onClick={openBooking} className={`w-full py-4 rounded-2xl font-bold text-lg shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 ${t.btnPrimary}`}>
               <Calendar size={20} />
               {d.bookOnline}
             </button>
@@ -1141,57 +1130,37 @@ export default function App() {
                 />
               ))}
             </div>
-            <button
-              onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
-              className={`w-14 h-14 rounded-full shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] flex items-center justify-center transition-all duration-300 active:scale-90 ${t.btnPrimary}`}
-            >
+            <button onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)} className={`w-14 h-14 rounded-full shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] flex items-center justify-center transition-all duration-300 active:scale-90 ${t.btnPrimary}`}>
               <Palette size={24} className="text-current" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Модалки: QR и Оформление записи */}
+      {/* Модалка QR */}
       {isQrOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div 
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-            onClick={() => setIsQrOpen(false)}
-          />
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setIsQrOpen(false)} />
           <div className={`relative w-full max-w-sm rounded-3xl shadow-2xl p-8 flex flex-col items-center animate-[slideUp_0.3s_ease-out] transition-colors duration-300 ${t.modalBg}`}>
-            <button 
-              onClick={() => setIsQrOpen(false)}
-              className={`absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full active:scale-90 transition-all duration-300 ${t.iconWrapper}`}
-            >
+            <button onClick={() => setIsQrOpen(false)} className={`absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full active:scale-90 transition-all duration-300 ${t.iconWrapper}`}>
               <X size={18} />
             </button>
-            <h3 className={`text-xl font-bold mb-6 text-center transition-colors duration-300 ${t.cardTextMain}`}>
-              {d.scanQr}
-            </h3>
+            <h3 className={`text-xl font-bold mb-6 text-center transition-colors duration-300 ${t.cardTextMain}`}>{d.scanQr}</h3>
             <div className="bg-white p-4 rounded-2xl shadow-inner w-64 h-64 flex items-center justify-center mb-2">
-              <img src="/qr.png" alt="QR Code" className="w-full h-full object-contain" onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.parentElement.innerHTML = '<span class="text-gray-400 text-sm text-center">QR.png not found</span>';
-              }}/>
+              <img src="/qr.png" alt="QR Code" className="w-full h-full object-contain" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<span class="text-gray-400 text-sm text-center">QR.png not found</span>'; }}/>
             </div>
           </div>
         </div>
       )}
 
+      {/* Модалка Оформления записи */}
       {bookingModal.isOpen && (
         <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 h-[100dvh]">
-          <div 
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-            onClick={closeBooking}
-          />
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={closeBooking} />
           
           <div className={`relative w-full max-w-lg rounded-t-[2rem] sm:rounded-3xl shadow-2xl p-6 modal-wrapper animate-[slideUp_0.3s_ease-out] transition-colors duration-300 max-h-[90dvh] overflow-y-auto scrollbar-hide ${t.modalBg}`}>
             <div className={`w-12 h-1.5 rounded-full mx-auto mb-6 sm:hidden transition-colors duration-300 ${t.grabber}`} />
-            
-            <button 
-              onClick={closeBooking}
-              className={`absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full active:scale-90 transition-all duration-300 ${t.iconWrapper}`}
-            >
+            <button onClick={closeBooking} className={`absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full active:scale-90 transition-all duration-300 ${t.iconWrapper}`}>
               <X size={18} />
             </button>
 
@@ -1206,67 +1175,63 @@ export default function App() {
             ) : (
               <>
                 <h2 className={`text-2xl font-bold mb-6 transition-colors duration-300 ${t.cardTextMain}`}>{d.bookingTitle}</h2>
-                
                 <div className={`rounded-2xl p-4 mb-6 border transition-colors duration-300 flex flex-col gap-4 ${t.inputBg} ${t.cardBorder}`}>
                   
-                  {/* Красивый кастомный выбор услуги */}
+                  {/* Выбор услуги */}
                   <div className={`relative border-b pb-4 ${t.cardBorder}`}>
                     <span className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${t.cardTextSub}`}>{d.service}</span>
-                    <div 
-                      onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'service' ? null : 'service'); }}
-                      className={`flex justify-between items-center w-full p-3.5 rounded-xl border cursor-pointer transition-all bg-white/50 backdrop-blur-sm shadow-sm ${t.inputBorder} ${openDropdown === 'service' ? 'ring-2 ' + t.inputFocusRing : ''}`}
-                    >
-                      <span className={`font-bold truncate pr-2 ${t.cardTextMain}`}>
-                        {bookingModal.service?.name}
-                      </span>
+                    <div onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'service' ? null : 'service'); }} className={`flex justify-between items-center w-full p-3.5 rounded-xl border cursor-pointer transition-all bg-white/50 backdrop-blur-sm shadow-sm ${t.inputBorder} ${openDropdown === 'service' ? 'ring-2 ' + t.inputFocusRing : ''}`}>
+                      <span className={`font-bold truncate pr-2 ${t.cardTextMain}`}>{bookingModal.services?.map(s => s.name).join(' + ') || "..."}</span>
                       <ChevronDown size={18} className={`transition-transform duration-300 flex-shrink-0 ${t.cardTextSub} ${openDropdown === 'service' ? 'rotate-180' : ''}`} />
                     </div>
-
                     {openDropdown === 'service' && (
                       <div className={`absolute left-0 right-0 top-full mt-2 z-[60] max-h-60 overflow-y-auto rounded-xl border shadow-2xl animate-[slideDown_0.2s_ease-out] ${t.cardBg} ${t.cardBorder}`}>
-                        {data.services.map(s => (
-                          <div 
-                            key={s.id}
-                            onClick={() => { setBookingModal(prev => ({...prev, service: s})); setOpenDropdown(null); }}
-                            className={`p-3.5 border-b last:border-b-0 cursor-pointer hover:bg-black/5 active:bg-black/10 transition-colors ${t.cardBorder}`}
-                          >
-                            <div className={`font-bold ${t.cardTextMain}`}>{s.name}</div>
-                            <div className={`text-xs mt-1 font-semibold opacity-70 ${t.cardTextSub}`}>{s.price.toLocaleString('ru-RU')} AMD</div>
-                          </div>
-                        ))}
+                        {data.services.map(s => {
+                          const isSelected = bookingModal.services.find(item => item.id === s.id);
+                          return (
+                            <div key={s.id} onClick={(e) => { 
+                                e.stopPropagation();
+                                setBookingModal(prev => {
+                                  if (isSelected) {
+                                    if (prev.services.length === 1) return prev;
+                                    return { ...prev, services: prev.services.filter(item => item.id !== s.id) };
+                                  } else {
+                                    if (prev.services.length >= 2) { showToast(d.maxServices); return prev; }
+                                    return { ...prev, services: [...prev.services, s] };
+                                  }
+                                });
+                              }}
+                              className={`p-3.5 border-b last:border-b-0 cursor-pointer flex items-center justify-between transition-colors ${t.cardBorder} ${isSelected ? 'bg-black/10 dark:bg-white/10' : 'hover:bg-black/5 dark:hover:bg-white/5 active:bg-black/10'}`}
+                            >
+                              <div className="pr-2">
+                                <div className={`font-bold ${isSelected ? t.accentText : t.cardTextMain}`}>{s.name}</div>
+                                <div className={`text-xs mt-1 font-semibold opacity-70 ${t.cardTextSub}`}>{s.price.toLocaleString('ru-RU')} AMD</div>
+                              </div>
+                              {isSelected && <Check size={20} className={`flex-shrink-0 ${t.accentText}`} />}
+                            </div>
+                          )
+                        })}
                       </div>
                     )}
                   </div>
 
-                  {/* Красивый кастомный выбор времени */}
+                  {/* Выбор времени */}
                   <div className="relative">
                     <span className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${t.cardTextSub}`}>{d.time}</span>
-                    <div 
-                      onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'time' ? null : 'time'); }}
-                      className={`flex justify-between items-center w-full p-3.5 rounded-xl border cursor-pointer transition-all bg-white/50 backdrop-blur-sm shadow-sm ${t.inputBorder} ${openDropdown === 'time' ? 'ring-2 ' + t.inputFocusRing : ''}`}
-                    >
-                      <span className={`font-bold truncate pr-2 ${t.cardTextMain}`}>
-                        {bookingModal.slot ? `${bookingModal.slot.displayDate}, ${bookingModal.slot.time}` : "..."}
-                      </span>
+                    <div onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'time' ? null : 'time'); }} className={`flex justify-between items-center w-full p-3.5 rounded-xl border cursor-pointer transition-all bg-white/50 backdrop-blur-sm shadow-sm ${t.inputBorder} ${openDropdown === 'time' ? 'ring-2 ' + t.inputFocusRing : ''}`}>
+                      <span className={`font-bold truncate pr-2 ${t.cardTextMain}`}>{bookingModal.slot ? `${bookingModal.slot.displayDate}, ${bookingModal.slot.time}` : "..."}</span>
                       <ChevronDown size={18} className={`transition-transform duration-300 flex-shrink-0 ${t.cardTextSub} ${openDropdown === 'time' ? 'rotate-180' : ''}`} />
                     </div>
-
                     {openDropdown === 'time' && (
                       <div className={`absolute left-0 right-0 top-full mt-2 z-[60] max-h-60 overflow-y-auto rounded-xl border shadow-2xl animate-[slideDown_0.2s_ease-out] ${t.cardBg} ${t.cardBorder}`}>
                         {availableDates.length > 0 ? availableDates.map(day => (
                           <div key={day.id}>
-                            <div className={`sticky top-0 px-4 py-2 text-xs font-black uppercase tracking-widest backdrop-blur-md bg-black/5 ${t.cardTextMain}`}>
-                              {day.shortDate}
-                            </div>
+                            <div className={`sticky top-0 px-4 py-2 text-xs font-black uppercase tracking-widest backdrop-blur-md bg-black/5 dark:bg-white/5 ${t.cardTextMain}`}>{day.shortDate}</div>
                             <div className="grid grid-cols-3 gap-2 p-3">
                               {day.times.map(time => (
-                                <div 
-                                  key={`${day.fullDate}|${time}`}
-                                  onClick={() => { setBookingModal(prev => ({...prev, slot: { fullDate: day.fullDate, displayDate: day.shortDate, time } })); setOpenDropdown(null); }}
-                                  className={`p-2.5 rounded-lg border text-center cursor-pointer active:scale-95 transition-all font-bold ${t.cardBorder} hover:bg-black/5 ${
-                                    bookingModal.slot?.fullDate === day.fullDate && bookingModal.slot?.time === time
-                                      ? `${t.accentBg} ${t.accentText} border-current`
-                                      : t.cardTextMain
+                                <div key={`${day.fullDate}|${time}`} onClick={() => { setBookingModal(prev => ({...prev, slot: { fullDate: day.fullDate, displayDate: day.shortDate, time } })); setOpenDropdown(null); }}
+                                  className={`p-2.5 rounded-lg border text-center cursor-pointer active:scale-95 transition-all font-bold ${t.cardBorder} hover:bg-black/5 dark:hover:bg-white/5 ${
+                                    bookingModal.slot?.fullDate === day.fullDate && bookingModal.slot?.time === time ? `${t.accentBg} ${t.accentText} border-current` : t.cardTextMain
                                   }`}
                                 >
                                   {time}
@@ -1274,54 +1239,27 @@ export default function App() {
                               ))}
                             </div>
                           </div>
-                        )) : (
-                          <div className={`p-5 text-center font-medium ${t.cardTextSub}`}>{d.noSlots}</div>
-                        )}
+                        )) : <div className={`p-5 text-center font-medium ${t.cardTextSub}`}>{d.noSlots}</div>}
                       </div>
                     )}
                   </div>
-
                 </div>
 
                 <form onSubmit={handleBookingSubmit} className="space-y-4">
                   <div>
                     <label className={`block text-sm font-semibold mb-1.5 ml-1 transition-colors duration-300 ${t.cardTextMain}`}>{d.yourName}</label>
                     <div className={`rounded-2xl border transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
-                      <input 
-                        type="text" 
-                        required
-                        value={formState.name}
-                        onChange={e => setFormState(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder={d.namePlaceholder} 
-                        className={`w-full px-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`}
-                      />
+                      <input type="text" required value={formState.name} onChange={e => setFormState(prev => ({ ...prev, name: e.target.value }))} placeholder={d.namePlaceholder} className={`w-full px-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`} />
                     </div>
                   </div>
-                  
                   <div>
                     <label className={`block text-sm font-semibold mb-1.5 ml-1 transition-colors duration-300 ${t.cardTextMain}`}>{d.phoneNum}</label>
                     <div className={`rounded-2xl border flex items-center transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
                       <span className={`pl-4 pr-1 font-medium transition-colors duration-300 opacity-60 ${t.cardTextMain}`}>+</span>
-                      <input 
-                        type="tel" 
-                        required
-                        value={formState.phone}
-                        onChange={e => {
-                          const val = formatPhone(e.target.value);
-                          setFormState(prev => ({ ...prev, phone: val, ...(prev.sameAsPhone ? {whatsapp: val} : {}) }))
-                        }}
-                        placeholder={d.phonePlaceholder} 
-                        className={`w-full pr-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`}
-                      />
+                      <input type="tel" required value={formState.phone} onChange={e => { const val = formatPhone(e.target.value); setFormState(prev => ({ ...prev, phone: val, ...(prev.sameAsPhone ? {whatsapp: val} : {}) })) }} placeholder={d.phonePlaceholder} className={`w-full pr-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`} />
                     </div>
-                    
                     <label className="flex items-center gap-2 mt-2 ml-1 cursor-pointer w-max">
-                      <input 
-                          type="checkbox" 
-                          checked={formState.sameAsPhone}
-                          onChange={e => setFormState(prev => ({ ...prev, sameAsPhone: e.target.checked, whatsapp: e.target.checked ? prev.phone : "" }))}
-                          className="w-4 h-4 rounded border-gray-300 text-[#D4A373] focus:ring-[#D4A373] accent-current"
-                      />
+                      <input type="checkbox" checked={formState.sameAsPhone} onChange={e => setFormState(prev => ({ ...prev, sameAsPhone: e.target.checked, whatsapp: e.target.checked ? prev.phone : "" }))} className="w-4 h-4 rounded border-gray-300 text-[#D4A373] focus:ring-[#D4A373] accent-current" />
                       <span className={`text-xs font-medium transition-colors duration-300 ${t.cardTextSub}`}>{d.waCheckbox}</span>
                     </label>
                   </div>
@@ -1331,17 +1269,7 @@ export default function App() {
                       <label className={`block text-sm font-semibold mb-1.5 ml-1 transition-colors duration-300 ${t.cardTextMain}`}>{d.waLabel}</label>
                       <div className={`rounded-2xl border flex items-center transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
                         <span className={`pl-4 pr-1 font-medium transition-colors duration-300 opacity-60 ${t.cardTextMain}`}>+</span>
-                        <input 
-                          type="tel" 
-                          required={!formState.sameAsPhone}
-                          value={formState.whatsapp}
-                          onChange={e => {
-                            const val = formatPhone(e.target.value);
-                            setFormState(prev => ({ ...prev, whatsapp: val }))
-                          }}
-                          placeholder={d.waPlaceholder} 
-                          className={`w-full pr-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`}
-                        />
+                        <input type="tel" required={!formState.sameAsPhone} value={formState.whatsapp} onChange={e => { const val = formatPhone(e.target.value); setFormState(prev => ({ ...prev, whatsapp: val })) }} placeholder={d.waPlaceholder} className={`w-full pr-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`} />
                       </div>
                     </div>
                   )}
@@ -1349,32 +1277,20 @@ export default function App() {
                   <div>
                     <label className={`block text-sm font-semibold mb-1.5 ml-1 transition-colors duration-300 ${t.cardTextMain}`}>{d.commentLabel}</label>
                     <div className={`rounded-2xl border transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
-                      <textarea 
-                        rows="2"
-                        value={formState.comment}
-                        onChange={e => setFormState(prev => ({ ...prev, comment: e.target.value }))}
-                        placeholder={d.commentPlaceholder} 
-                        className={`w-full px-4 py-3 bg-transparent focus:outline-none font-medium placeholder:opacity-40 resize-none ${t.inputText}`}
-                      />
+                      <textarea rows="2" value={formState.comment} onChange={e => setFormState(prev => ({ ...prev, comment: e.target.value }))} placeholder={d.commentPlaceholder} className={`w-full px-4 py-3 bg-transparent focus:outline-none font-medium placeholder:opacity-40 resize-none ${t.inputText}`} />
                     </div>
                   </div>
 
-                  <button 
-                    type="submit" 
-                    disabled={formState.isSubmitting}
-                    className={`w-full mt-2 py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:active:scale-100 ${t.btnPrimary}`}
-                  >
+                  <button type="submit" disabled={formState.isSubmitting} className={`w-full mt-2 py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:active:scale-100 ${t.btnPrimary}`}>
                     {formState.isSubmitting ? (
                       <span className="flex items-center gap-2">
-                        <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
                         {d.sending}
                       </span>
-                    ) : (
-                      d.confirmBooking
-                    )}
+                    ) : d.confirmBooking}
                   </button>
                   <p className={`text-[10px] text-center mt-3 opacity-60 transition-colors duration-300 ${t.cardTextSub}`}>
-                    Нажимая кнопку, вы даете согласие на обработку персональных данных.
+                    {d.consent}
                   </p>
                 </form>
               </>
@@ -1383,37 +1299,19 @@ export default function App() {
         </div>
       )}
 
+      {/* Global CSS Logic for styling that can't be done via Tailwind safely */}
       <style dangerouslySetInnerHTML={{__html: `
         html, body {
           margin: 0;
           padding: 0;
           width: 100%;
           -webkit-tap-highlight-color: transparent;
-          background-color: ${t.appBg.replace('bg-[', '').replace(']', '')};
           transition: background-color 0.3s ease;
         }
-
-        body {
-          overscroll-behavior-y: none; 
-        }
-
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        @keyframes slideUp {
-          from { transform: translateY(10%); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes slideDown {
-          from { transform: translateY(-10px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes slideUp { from { transform: translateY(10%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
       `}} />
     </div>
   );
