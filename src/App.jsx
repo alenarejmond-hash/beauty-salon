@@ -39,7 +39,6 @@ function WalletIcon(props) {
 }
 
 // URL обфусцирован (зашифрован в base64) для защиты от простых парсеров исходного кода.
-// Ссылка теперь актуальная (из нового развертывания).
 const GOOGLE_APPS_SCRIPT_URL = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J4SkVWb2RocncwRF9GdnFMaktYcEpqRmJCZnZLNXpKd1g3NWQ0b3FObXBhMmNFc1doV25xMW56NkhscmRLUDJ6R0JwUS9leGVj'); 
 
 const DICT = {
@@ -74,8 +73,9 @@ const DICT = {
     copied: "Պատճենված է",
     copyError: "Պատճենման սխալ",
     installHint: 'Սեղմեք "Կիսվել" և ընտրեք "Ավելացնել էկրանին"',
-    loadingSlots: "Ժամանակացույցի բեռնում...",
+    loadingSlots: "Համաժամացում...",
     noSlots: "Այս պահին ազատ պատուհաններ չկան կամ վարպետը արձակուրդում է 🌴 Հավաքում եմ ուժեր ձեզ ավելի գեղեցիկ դարձնելու համար: Մոտ օրերս նոր պատուհաններ կավելանան:",
+    upcomingVacation: "Շուտով արձակուրդ է 🌴 Հասցրեք գրանցվել մնացած ազատ օրերին:",
     // Mock Data
     s_manicure: "Մատնահարդարում",
     s_pedicure: "Պեդիկյուր",
@@ -110,7 +110,7 @@ const DICT = {
     yourName: "Ваше Имя",
     phoneNum: "Номер телефона",
     confirmBooking: "Подтвердить запись",
-    sending: "Отправка...",
+    sending: "Оформляем...",
     successTitle: "Заявка отправлена!",
     successText: "Спасибо! Я свяжусь с вами в ближайшее время для подтверждения записи.",
     byAgreement: "По согласованию",
@@ -119,8 +119,9 @@ const DICT = {
     copied: "Скопировано в буфер!",
     copyError: "Ошибка копирования",
     installHint: 'Нажмите "Поделиться" -> "На экран Домой"',
-    loadingSlots: "Загрузка расписания...",
+    loadingSlots: "Синхронизация расписания...",
     noSlots: "Свободных окон пока нет или мастер в отпуске 🌴 Набираюсь сил, чтобы делать вас еще красивее! Окошки скоро появятся.",
+    upcomingVacation: "Скоро отпуск 🌴 Успейте занять последние свободные окна!",
     // Mock Data
     s_manicure: "Маникюр",
     s_pedicure: "Педикюр",
@@ -243,8 +244,10 @@ const THEMES = {
     toastText: "text-white",
     successIcon: "text-emerald-500",
     successBg: "bg-emerald-100",
+    statusDotBg: "bg-emerald-500",
     cardShadow: "shadow-[0_4px_20px_-8px_rgba(28,25,23,0.08)]",
     pillBg: "bg-black/5",
+    skeletonBg: "bg-stone-200/50",
   },
   obsidian: {
     appBg: "bg-[#0F0F11]",
@@ -282,8 +285,10 @@ const THEMES = {
     toastText: "text-[#F4E8C1]",
     successIcon: "text-emerald-400",
     successBg: "bg-emerald-400/10",
+    statusDotBg: "bg-emerald-400",
     cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.4)]",
     pillBg: "bg-white/5",
+    skeletonBg: "bg-white/5",
   },
   emerald: {
     appBg: "bg-[#0B1D17]",
@@ -321,8 +326,10 @@ const THEMES = {
     toastText: "text-[#F1F5F9]",
     successIcon: "text-[#5EEAD4]",
     successBg: "bg-[#5EEAD4]/10",
+    statusDotBg: "bg-[#5EEAD4]",
     cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.3)]",
     pillBg: "bg-white/5",
+    skeletonBg: "bg-white/5",
   },
   espresso: {
     appBg: "bg-[#F5F0EB]",
@@ -360,8 +367,10 @@ const THEMES = {
     toastText: "text-[#F5F0EB]",
     successIcon: "text-[#C5A059]",
     successBg: "bg-[#C5A059]/15",
+    statusDotBg: "bg-[#C5A059]",
     cardShadow: "shadow-[0_4px_20px_-8px_rgba(44,34,30,0.15)]",
     pillBg: "bg-black/5",
+    skeletonBg: "bg-[#4A3B32]/50",
   }
 };
 
@@ -391,7 +400,6 @@ const SectionTitle = ({ title, icon: Icon, t }) => (
   </div>
 );
 
-// Функция для превращения даты из формата "01.10.2026" в "1 Окт" и определения "Сегодня/Завтра"
 const parseSheetDate = (dateStr, lang) => {
   const [d, m, y] = dateStr.split('.');
   const dateObj = new Date(y, m - 1, d);
@@ -416,7 +424,6 @@ export default function App() {
   const d = DICT[lang]; 
   const data = getMockData(lang); 
 
-  // Состояния для дат из Google Таблицы
   const [availableDates, setAvailableDates] = useState([]);
   const [isLoadingDates, setIsLoadingDates] = useState(true);
   const [selectedDateIdx, setSelectedDateIdx] = useState(0); 
@@ -463,7 +470,6 @@ export default function App() {
     setActiveCategory(data.services[0].category);
   }, [lang]);
 
-  // Запрашиваем актуальные даты из Google Таблицы при загрузке
   useEffect(() => {
     const fetchSlots = async () => {
       setIsLoadingDates(true);
@@ -472,15 +478,14 @@ export default function App() {
         const fetchedData = await res.json();
         
         if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-          // Преобразуем формат таблицы в формат для UI
           const parsedDates = fetchedData.map((dayObj, i) => {
             const parsed = parseSheetDate(dayObj.date, lang);
             return {
               id: dayObj.id || i,
-              fullDate: parsed.fullDate, // Важно! "01.10.2026" для отправки обратно
-              shortDate: parsed.shortDate, // "1 Окт" для красоты
-              label: parsed.label, // "Сегодня" / "Завтра"
-              times: dayObj.times // ["9:00", "13:00"]
+              fullDate: parsed.fullDate,
+              shortDate: parsed.shortDate,
+              label: parsed.label,
+              times: dayObj.times 
             };
           });
           setAvailableDates(parsedDates);
@@ -490,14 +495,14 @@ export default function App() {
         }
       } catch (error) {
         console.error("Ошибка при загрузке расписания:", error);
-        setAvailableDates([]); // В случае ошибки показываем плашку про отпуск
+        setAvailableDates([]);
       } finally {
         setIsLoadingDates(false);
       }
     };
 
     fetchSlots();
-  }, [lang]); // Перезапрашиваем при смене языка, чтобы обновить "Октябрь" / "Հոկտ"
+  }, [lang]);
 
   const t = THEMES[theme];
 
@@ -571,11 +576,10 @@ export default function App() {
     document.body.style.touchAction = '';
   };
 
-  const handleBookingSubmit = async (e) => {
+  const handleBookingSubmit = (e) => {
     e.preventDefault();
     setFormState(prev => ({ ...prev, isSubmitting: true }));
 
-    // Отправляем полную дату "01.10.2026", чтобы скрипт понял её и создал событие в календаре
     const payload = {
       name: formState.name,
       phone: `+374 ${formState.phone.replace(/^\+?374\s*/, '')}`, 
@@ -584,21 +588,19 @@ export default function App() {
       timestamp: new Date().toISOString()
     };
 
-    try {
-      if (GOOGLE_APPS_SCRIPT_URL) {
-        await fetch(GOOGLE_APPS_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } else {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-      }
-      
+    if (GOOGLE_APPS_SCRIPT_URL) {
+      fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(err => console.error("Ошибка фоновой отправки:", err));
+    }
+
+    // Мгновенный оптимистичный интерфейс (не ждем ответа от сервера)
+    setTimeout(() => {
       setFormState(prev => ({ ...prev, isSubmitting: false, isSuccess: true }));
       
-      // Локально убираем занятое время с экрана до перезагрузки
       if (bookingModal.slot) {
          setAvailableDates(prevDates => {
             const newDates = [...prevDates];
@@ -611,17 +613,14 @@ export default function App() {
       }
 
       setTimeout(closeBooking, 3000);
-    } catch (error) {
-      setFormState(prev => ({ ...prev, isSubmitting: false }));
-      showToast("Error. Please try again.");
-    }
+    }, 400);
   };
 
   const categories = [...new Set(data.services.map(s => s.category))];
   const filteredServices = data.services.filter(s => s.category === activeCategory);
 
   return (
-    <div className={`app-wrapper font-sans selection:bg-rose-200 antialiased flex flex-col relative transition-colors duration-300 ${t.appBg} ${t.appTextMain}`}>
+    <div className={`app-wrapper font-sans selection:bg-rose-200 antialiased flex flex-col relative transition-colors duration-300 min-h-[100dvh] w-full overflow-x-hidden ${t.appBg} ${t.appTextMain}`}>
       
       <Toast message={toast.message} isVisible={toast.visible} t={t} />
 
@@ -676,9 +675,9 @@ export default function App() {
             className={`relative w-28 h-28 object-cover rounded-full border-4 shadow-lg object-top transition-colors duration-300 ${t.avatarBorder}`}
           />
           <div className={`absolute -bottom-1 -right-1 p-1 rounded-full shadow-sm transition-colors duration-300 ${t.headerBg}`}>
-            <span className={`flex items-center justify-center w-6 h-6 rounded-full ${t.successBg}`}>
-              <span className={`w-2.5 h-2.5 rounded-full animate-ping absolute opacity-75 ${t.successIcon.replace('text-', 'bg-')}`} />
-              <span className={`w-2 h-2 rounded-full ${t.successIcon.replace('text-', 'bg-')}`} />
+            <span className={`flex items-center justify-center w-6 h-6 rounded-full relative z-10 ${t.successBg}`}>
+              <span className={`w-2.5 h-2.5 rounded-full animate-ping absolute opacity-75 ${t.statusDotBg}`} />
+              <span className={`w-2 h-2 rounded-full relative z-20 ${t.statusDotBg}`} />
             </span>
           </div>
         </div>
@@ -707,14 +706,25 @@ export default function App() {
 
       <main className="px-5 mt-8 w-full max-w-md mx-auto space-y-10 flex-1 relative z-10">
         
-        {}
+        {/* БЛОК СВОБОДНЫЕ ОКНА */}
         <section>
           <SectionTitle title={d.availableSlots} icon={Sparkles} t={t} />
           
           {isLoadingDates ? (
-            <div className={`w-full p-8 rounded-3xl border flex flex-col items-center justify-center text-center gap-3 transition-colors duration-300 ${t.cardBg} ${t.cardBorder}`}>
-              <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin opacity-50" style={{ borderColor: THEME_OPTIONS.find(o => o.id === theme).border, borderTopColor: 'transparent' }} />
-              <p className={`text-sm font-medium animate-pulse ${t.cardTextSub}`}>{d.loadingSlots}</p>
+            <div className={`w-full p-6 rounded-3xl border flex flex-col gap-5 transition-colors duration-300 ${t.cardBg} ${t.cardBorder}`}>
+              <div className="w-full flex flex-col gap-4 animate-[pulse_1.5s_ease-in-out_infinite]">
+                <div className="flex gap-2 overflow-hidden">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className={`h-16 w-24 rounded-2xl flex-shrink-0 transition-colors duration-300 ${t.skeletonBg}`} />
+                  ))}
+                </div>
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-2">
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <div key={i} className={`h-11 w-full rounded-xl transition-colors duration-300 ${t.skeletonBg}`} />
+                  ))}
+                </div>
+              </div>
+              <p className={`text-xs text-center font-medium animate-pulse ${t.cardTextSub}`}>{d.loadingSlots}</p>
             </div>
           ) : availableDates.length === 0 ? (
             <div className={`w-full p-8 rounded-3xl border flex flex-col items-center justify-center text-center gap-4 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} shadow-sm`}>
@@ -725,25 +735,46 @@ export default function App() {
             </div>
           ) : (
             <>
-              <div className="flex gap-3 overflow-x-auto pb-4 pt-1 -mx-5 px-5 snap-x scrollbar-hide">
-                {availableDates.map((day, idx) => (
-                  <button
-                    key={day.id}
-                    onClick={() => setSelectedDateIdx(idx)}
-                    className={`snap-start flex-shrink-0 min-w-[85px] py-3.5 px-4 rounded-2xl flex flex-col items-center justify-center transition-all duration-300 border ${
-                      selectedDateIdx === idx
-                        ? `${t.tabActive} shadow-lg border-transparent scale-105`
-                        : `${t.tabInactive} hover:opacity-80 scale-100`
-                    }`}
-                  >
-                    {day.label && <span className="text-[10px] font-bold uppercase tracking-wider mb-1 opacity-70">{day.label}</span>}
-                    <span className={`text-sm font-bold whitespace-nowrap ${!day.label && 'mt-1'}`}>{day.shortDate}</span>
-                  </button>
-                ))}
+              {/* Предупреждение об отпуске (FOMO-триггер), если осталось мало дат */}
+              {availableDates.length > 0 && availableDates.length <= 5 && (
+                <div className={`mb-5 p-3.5 rounded-2xl flex items-start gap-3 border transition-colors duration-300 ${t.accentBg} ${t.accentText} border-current/20`}>
+                  <Info size={20} className="flex-shrink-0 mt-0.5" />
+                  <p className="text-sm font-medium leading-snug">{d.upcomingVacation}</p>
+                </div>
+              )}
+
+              {/* Карусель дат с горизонтальным скроллом */}
+              <div className="relative mb-5">
+                <div className="flex gap-2.5 overflow-x-auto pb-4 -mx-5 px-5 scrollbar-hide snap-x items-center">
+                  {availableDates.map((day, idx) => (
+                    <button
+                      key={day.id}
+                      onClick={() => setSelectedDateIdx(idx)}
+                      className={`snap-center flex-shrink-0 min-w-[90px] py-2.5 px-4 rounded-2xl flex flex-col items-center justify-center transition-all duration-300 border ${
+                        selectedDateIdx === idx
+                          ? `${t.tabActive} shadow-lg border-transparent scale-105`
+                          : `${t.tabInactive} hover:opacity-80 scale-100`
+                      }`}
+                    >
+                      <span className={`text-[15px] font-bold whitespace-nowrap`}>
+                        {day.shortDate}
+                      </span>
+                      {day.label && <span className="text-[10px] font-semibold uppercase tracking-wider mt-1 opacity-80">{day.label}</span>}
+                    </button>
+                  ))}
+                  
+                  {/* Иконка-подсказка скролла (Стрелочка вправо) */}
+                  {availableDates.length > 3 && (
+                    <div className="snap-center flex-shrink-0 flex items-center justify-center pl-1 pr-5 opacity-40">
+                      <ChevronRight size={28} className="animate-[pulse_1.5s_ease-in-out_infinite]" />
+                    </div>
+                  )}
+                </div>
               </div>
 
+              {/* Сетка времени для выбранной даты */}
               {availableDates[selectedDateIdx] && (
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-1 animate-[slideUp_0.3s_ease-out]">
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 animate-[slideUp_0.3s_ease-out]">
                   {availableDates[selectedDateIdx].times.map((time, idx) => (
                     <button
                       key={idx}
@@ -763,7 +794,7 @@ export default function App() {
           )}
         </section>
 
-        {}
+        {/* БЛОК ПРАЙС-ЛИСТ */}
         <section>
           <SectionTitle title={d.priceList} icon={Star} t={t} />
           
@@ -814,7 +845,7 @@ export default function App() {
           </div>
         </section>
 
-        {}
+        {/* БЛОК ОПЛАТА */}
         <section>
           <SectionTitle title={d.paymentDetails} icon={CreditCard} t={t} />
           <div className={`rounded-3xl p-2 border flex flex-col gap-1 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} ${t.cardShadow}`}>
@@ -844,7 +875,7 @@ export default function App() {
           </div>
         </section>
 
-        {}
+        {/* БЛОК ПРАВИЛА */}
         <section>
           <SectionTitle title={d.rules} icon={ShieldAlert} t={t} />
           <div className={`rounded-3xl p-5 border transition-colors duration-300 ${t.policyBg} ${t.cardBorder}`}>
@@ -860,7 +891,7 @@ export default function App() {
         </section>
       </main>
 
-      {}
+      {/* ФУТЕР */}
       <footer className={`mt-12 border-t py-10 px-5 flex flex-col items-center w-full transition-colors duration-300 relative z-10 pb-28 ${t.footerBg} ${t.footerBorder}`}>
         
         <div className="w-full max-w-xs space-y-3 mb-8">
@@ -1044,27 +1075,17 @@ export default function App() {
           overscroll-behavior-y: none; 
         }
 
-        .app-wrapper {
-          min-height: 100dvh;
-          width: 100%;
-          overflow-x: hidden;
-        }
-
-        .modal-wrapper {
-          padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
-        }
-
-        @keyframes slideUp {
-          from { transform: translateY(10%); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
         .scrollbar-hide {
             -ms-overflow-style: none;
             scrollbar-width: none;
+        }
+
+        @keyframes slideUp {
+          from { transform: translateY(10%); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
         }
       `}} />
     </div>
