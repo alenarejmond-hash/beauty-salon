@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Calendar, Clock, MapPin, Sparkles, Copy, Check, 
-  Phone, Send, X, ChevronRight, ChevronDown, CreditCard, 
+  Phone, Send, X, ChevronDown, CreditCard, 
   Info, ShieldAlert, Star, Palette, QrCode, UserPlus, 
-  DownloadCloud, Smartphone
+  Smartphone
 } from 'lucide-react';
 
 function Instagram({ size = 24, className = '', ...props }) {
@@ -83,8 +83,9 @@ const DICT = {
     status: "Ընդունումը գրանցումով",
     bookOnline: "Գրանցվել առցանց",
     availableSlots: "Ազատ պատուհաններ",
+    nearestWindows: "Մոտակա ազատ պատուհանները՝",
+    availableDatesInfo: "Հստակ ժամը և ծառայությունը ընտրվում են գրանցման ժամանակ:",
     priceList: "Գնացուցակ",
-    select: "Ընտրել",
     paymentDetails: "Վճարման տվյալներ",
     rules: "Ընդունելության կանոններ",
     contactMe: "Կապվել ինձ հետ",
@@ -109,13 +110,11 @@ const DICT = {
     sending: "Ուղարկվում է...",
     successTitle: "Հայտը ուղարկված է!",
     successText: "Շնորհակալություն: Ես կկապվեմ ձեզ հետ շուտով հաստատման համար:",
-    byAgreement: "Ըստ համաձայնության",
-    willChooseInChat: "Կընտրենք չաթում",
     copied: "Պատճենված է",
     copyError: "Պատճենման սխալ",
     installHint: 'Սեղմեք "Կիսվել" և ընտրեք "Ավելացնել էկրանին"',
     loadingSlots: "Համաժամացում...",
-    noSlots: "Այս պահին ազատ պատուհաններ չկան կամ վարպետը արձակուրդում է 🌴 Հավաքում եմ ուժեր ձեզ ավելի գեղեցիկ դարձնելու համար: Մոտ օրերս նոր պատուհաններ կավելանան:",
+    noSlots: "Այս պահին ազատ պատուհաններ չկան կամ վարպետը արձակուրդում է 🌴 Մոտ օրերս նոր պատուհաններ կավելանան:",
     upcomingVacation: "Շուտով արձակուրդ է 🌴 Հասցրեք գրանցվել մնացած ազատ օրերին!",
     upcomingVacationDates: (start, end) => `Շուտով արձակուրդ է 🌴 (${start} - ${end}): Հասցրեք գրանցվել վերջին ազատ օրերին!`,
     s_manicure: "Մատնահարդարում",
@@ -123,7 +122,6 @@ const DICT = {
     s_design: "Դիզայն և խնամք",
     today: "Այսօր",
     tomorrow: "Վաղը",
-    discount: "Զեղչ 10%",
     pol1: "Կանխավճար 2000 AMD ժամանակը ֆիքսելու համար:",
     pol2: "Ավելի քան 15 րոպե ուշացում = գրանցման չեղարկում:",
     pol3: "Խնդրում ենք գալ առանց ուղեկցողների:",
@@ -135,8 +133,9 @@ const DICT = {
     status: "Прием по записи",
     bookOnline: "Записаться онлайн",
     availableSlots: "Свободные окна",
+    nearestWindows: "Ближайшие свободные окна есть на:",
+    availableDatesInfo: "Точное время и услуга выбираются при оформлении записи.",
     priceList: "Прайс-лист",
-    select: "Выбрать",
     paymentDetails: "Реквизиты для оплаты",
     rules: "Правила приема",
     contactMe: "Связаться со мной",
@@ -161,13 +160,11 @@ const DICT = {
     sending: "Оформляем...",
     successTitle: "Заявка отправлена!",
     successText: "Спасибо! Я свяжусь с вами в ближайшее время для подтверждения записи.",
-    byAgreement: "По согласованию",
-    willChooseInChat: "Выберем в чате",
     copied: "Скопировано в буфер!",
     copyError: "Ошибка копирования",
     installHint: 'Нажмите "Поделиться" -> "На экран Домой"',
     loadingSlots: "Синхронизация расписания...",
-    noSlots: "Свободных окон пока нет или мастер в отпуске 🌴 Набираюсь сил, чтобы делать вас еще красивее! Окошки скоро появятся.",
+    noSlots: "Свободных окон пока нет или мастер в отпуске 🌴 Окошки скоро появятся.",
     upcomingVacation: "Скоро отпуск 🌴 Успейте занять последние свободные окна!",
     upcomingVacationDates: (start, end) => `Скоро отпуск 🌴 (${start} - ${end}). Успейте занять последние окна!`,
     s_manicure: "Маникюр",
@@ -175,7 +172,6 @@ const DICT = {
     s_design: "Дизайн & Уход",
     today: "Сегодня",
     tomorrow: "Завтра",
-    discount: "Скидка 10%",
     pol1: "Предоплата 2000 AMD для фиксации времени.",
     pol2: "Опоздание более 15 минут = отмена записи (предоплата не возвращается).",
     pol3: "Приходите, пожалуйста, без сопровождающих.",
@@ -256,47 +252,6 @@ const getMockData = (lang) => ({
 });
 
 const THEMES = {
-  nude: {
-    appBg: "bg-[#FDFBF7]",
-    appTextMain: "text-[#2D2A26]",
-    appTextSub: "text-[#2D2A26]/70",
-    headerBg: "bg-white",
-    avatarBorder: "border-white",
-    glow: "bg-[#D4A373]/20",
-    cardBg: "bg-white",
-    cardBorder: "border-stone-200/80",
-    cardTextMain: "text-[#2D2A26]",
-    cardTextSub: "text-[#2D2A26]/60",
-    btnPrimary: "bg-[#D4A373] text-white shadow-[#D4A373]/20",
-    accentText: "text-[#D4A373]",
-    accentBg: "bg-[#D4A373]/10",
-    badgeBg: "bg-black/5",
-    badgeText: "text-[#2D2A26]",
-    statusBadgeBg: "bg-[#D4A373]/10",
-    statusBadgeText: "text-[#D4A373]",
-    tabActive: "bg-[#2D2A26] text-white",
-    tabInactive: "bg-white text-[#2D2A26]/70 border-stone-200/80",
-    btnSecondary: "bg-[#FDFBF7] text-[#2D2A26] hover:bg-[#E8D5C8]/50",
-    iconWrapper: "bg-[#FDFBF7] text-[#D4A373]",
-    policyBg: "bg-[#D4A373]/5",
-    bullet: "bg-[#D4A373]",
-    footerBg: "bg-white",
-    footerBorder: "border-[#E8D5C8]",
-    modalBg: "bg-white",
-    grabber: "bg-[#E8D5C8]",
-    inputBg: "bg-stone-100/80 focus-within:bg-white",
-    inputBorder: "border-transparent focus-within:border-[#D4A373]",
-    inputFocusRing: "focus-within:ring-[#D4A373]/30",
-    inputText: "text-[#2D2A26]",
-    toastBg: "bg-[#2D2A26]",
-    toastText: "text-white",
-    successIcon: "text-emerald-500",
-    successBg: "bg-emerald-100",
-    statusDotBg: "bg-emerald-500",
-    cardShadow: "shadow-[0_4px_20px_-8px_rgba(28,25,23,0.08)]",
-    pillBg: "bg-black/5",
-    skeletonBg: "bg-stone-200/50",
-  },
   obsidian: {
     appBg: "bg-[#0F0F11]",
     appTextMain: "text-[#F4E8C1]",
@@ -587,14 +542,13 @@ const THEMES = {
 };
 
 const THEME_OPTIONS = [
-  { id: 'nude', color: '#FDFBF7', border: '#D4A373' },
   { id: 'obsidian', color: '#0F0F11', border: '#D4AF37' },
+  { id: 'carbon', color: '#111111', border: '#FFFFFF' },
+  { id: 'cognac', color: '#140D0B', border: '#D97736' },
   { id: 'emerald', color: '#0B1D17', border: '#5EEAD4' },
   { id: 'espresso', color: '#F5F0EB', border: '#C5A059' },
   { id: 'rose', color: '#FCF7F8', border: '#F2A4B3' },
-  { id: 'lavender', color: '#F9F9FE', border: '#B3A4F2' },
-  { id: 'carbon', color: '#111111', border: '#FFFFFF' },
-  { id: 'cognac', color: '#140D0B', border: '#D97736' }
+  { id: 'lavender', color: '#F9F9FE', border: '#B3A4F2' }
 ];
 
 const Toast = ({ message, isVisible, t }) => (
@@ -643,8 +597,8 @@ export default function App() {
   const [rawDates, setRawDates] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
   const [isLoadingDates, setIsLoadingDates] = useState(true);
-  const [selectedDateIdx, setSelectedDateIdx] = useState(0); 
   const [isFetched, setIsFetched] = useState(false);
+  const [showFab, setShowFab] = useState(false);
 
   const [activeCategory, setActiveCategory] = useState(data.services[0].category);
   const [toast, setToast] = useState({ visible: false, message: "" });
@@ -656,7 +610,7 @@ export default function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('app-theme') || 'nude';
+    return localStorage.getItem('app-theme') || 'obsidian';
   });
 
   const [bookingModal, setBookingModal] = useState({
@@ -691,6 +645,15 @@ export default function App() {
   useEffect(() => {
     setActiveCategory(data.services[0].category);
   }, [lang]);
+
+  // Слушатель скролла для плавающей кнопки (FAB)
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowFab(window.scrollY > 250);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (isFetched) return;
@@ -733,13 +696,11 @@ export default function App() {
           };
         });
       setAvailableDates(parsedDates);
-      setSelectedDateIdx(prev => prev >= parsedDates.length ? 0 : prev);
     } else {
       setAvailableDates([]);
     }
   }, [rawDates, lang]);
 
-  // Закрытие выпадающих списков при клике вне их области
   useEffect(() => {
     const close = () => setOpenDropdown(null);
     if (openDropdown) {
@@ -748,7 +709,7 @@ export default function App() {
     return () => document.removeEventListener('click', close);
   }, [openDropdown]);
 
-  const t = THEMES[theme];
+  const t = THEMES[theme] || THEMES['obsidian'];
 
   const showToast = useCallback((message) => {
     setToast({ visible: true, message });
@@ -807,11 +768,11 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
-  const openBooking = (service = null, slot = null) => {
-    const defaultService = service || data.services[0];
+  const openBooking = () => {
+    const defaultService = data.services[0];
     
-    let defaultSlot = slot;
-    if (!defaultSlot && availableDates.length > 0) {
+    let defaultSlot = null;
+    if (availableDates.length > 0) {
       defaultSlot = {
         fullDate: availableDates[0].fullDate,
         displayDate: availableDates[0].shortDate,
@@ -822,7 +783,6 @@ export default function App() {
     setBookingModal({ isOpen: true, service: defaultService, slot: defaultSlot });
     setFormState({ name: "", phone: "", whatsapp: "", sameAsPhone: true, comment: "", isSubmitting: false, isSuccess: false });
     
-    // Надежная блокировка скролла фона (особенно для iOS)
     const scrollY = window.scrollY;
     document.body.style.position = 'fixed';
     document.body.style.top = `-${scrollY}px`;
@@ -833,7 +793,6 @@ export default function App() {
     setBookingModal({ isOpen: false, service: null, slot: null });
     setOpenDropdown(null);
     
-    // Возвращаем скролл на место
     const scrollY = document.body.style.top;
     document.body.style.position = '';
     document.body.style.top = '';
@@ -853,8 +812,8 @@ export default function App() {
       phone: cleanPhone, 
       whatsapp: cleanWa,
       comment: formState.comment,
-      service: bookingModal.service?.name || d.byAgreement,
-      slot: bookingModal.slot ? `${bookingModal.slot.fullDate} ${bookingModal.slot.time}` : d.willChooseInChat,
+      service: bookingModal.service?.name,
+      slot: `${bookingModal.slot.fullDate} ${bookingModal.slot.time}`,
       timestamp: new Date().toISOString()
     };
 
@@ -903,7 +862,7 @@ export default function App() {
   const filteredServices = data.services.filter(s => s.category === activeCategory);
 
   return (
-    <div className={`app-wrapper font-sans selection:bg-rose-200 antialiased flex flex-col relative transition-colors duration-300 min-h-[100dvh] w-full overflow-x-hidden ${t.appBg} ${t.appTextMain}`}>
+    <div className={`app-wrapper font-sans selection:bg-rose-200 antialiased flex flex-col relative transition-colors duration-300 min-h-[100dvh] w-full overflow-x-hidden pb-28 ${t.appBg} ${t.appTextMain}`}>
       
       <Toast message={toast.message} isVisible={toast.visible} t={t} />
 
@@ -922,26 +881,6 @@ export default function App() {
           className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-300 ${lang === 'ru' ? t.tabActive : 'text-current opacity-60 hover:opacity-100 bg-transparent'}`}
         >
           РУС
-        </button>
-      </div>
-
-      <div className="fixed bottom-6 right-6 z-[90] flex flex-col items-end gap-3">
-        <div className={`flex flex-col gap-2 transition-all duration-300 origin-bottom ${isThemeMenuOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}>
-          {THEME_OPTIONS.map(opt => (
-            <button
-              key={opt.id}
-              onClick={() => { setTheme(opt.id); setIsThemeMenuOpen(false); }}
-              className={`w-10 h-10 rounded-full shadow-lg border-2 transition-transform active:scale-90 ${theme === opt.id ? 'scale-110' : 'scale-100'}`}
-              style={{ backgroundColor: opt.color, borderColor: opt.border }}
-              aria-label={`Switch to ${opt.id} theme`}
-            />
-          ))}
-        </div>
-        <button
-          onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
-          className={`w-12 h-12 rounded-full shadow-xl flex items-center justify-center transition-all duration-300 active:scale-90 ${t.btnPrimary}`}
-        >
-          <Palette size={22} className="text-current" />
         </button>
       </div>
 
@@ -982,8 +921,8 @@ export default function App() {
         </div>
 
         <button 
-          onClick={() => openBooking()}
-          className={`w-full max-w-xs py-4 px-6 rounded-2xl font-bold text-lg shadow-[0_8px_30px_-10px_rgba(0,0,0,0.2)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 mx-auto ${t.btnPrimary}`}
+          onClick={openBooking}
+          className={`w-full max-w-xs py-4 px-6 rounded-[2rem] font-bold text-lg shadow-[0_8px_30px_-10px_rgba(0,0,0,0.3)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 mx-auto ${t.btnPrimary}`}
         >
           <Calendar size={20} />
           {d.bookOnline}
@@ -992,24 +931,14 @@ export default function App() {
 
       <main className="px-5 mt-8 w-full max-w-md mx-auto space-y-10 flex-1 relative z-10">
         
+        {/* Информационный блок: Свободные окна */}
         <section>
           <SectionTitle title={d.availableSlots} icon={Sparkles} t={t} />
           
           {isLoadingDates ? (
-            <div className={`w-full p-6 rounded-3xl border flex flex-col gap-5 transition-colors duration-300 ${t.cardBg} ${t.cardBorder}`}>
-              <div className="w-full flex flex-col gap-4 animate-[pulse_1.5s_ease-in-out_infinite]">
-                <div className="flex gap-2 overflow-hidden">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className={`h-16 w-24 rounded-2xl flex-shrink-0 transition-colors duration-300 ${t.skeletonBg}`} />
-                  ))}
-                </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-2">
-                  {[1, 2, 3, 4, 5].map(i => (
-                    <div key={i} className={`h-11 w-full rounded-xl transition-colors duration-300 ${t.skeletonBg}`} />
-                  ))}
-                </div>
-              </div>
-              <p className={`text-xs text-center font-medium animate-pulse ${t.cardTextSub}`}>{d.loadingSlots}</p>
+            <div className={`w-full p-6 rounded-3xl border flex flex-col items-center gap-4 transition-colors duration-300 ${t.cardBg} ${t.cardBorder}`}>
+              <div className={`w-10 h-10 rounded-full animate-spin border-4 border-t-transparent ${t.accentText.replace('text-', 'border-')}`} style={{borderTopColor: 'transparent'}} />
+              <p className={`text-sm font-medium animate-pulse ${t.cardTextSub}`}>{d.loadingSlots}</p>
             </div>
           ) : availableDates.length === 0 ? (
             <div className={`w-full p-8 rounded-3xl border flex flex-col items-center justify-center text-center gap-4 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} shadow-sm`}>
@@ -1031,57 +960,29 @@ export default function App() {
                 </div>
               )}
 
-              <div className="relative mb-5">
-                <div className="flex gap-2.5 overflow-x-auto pt-3 pb-4 -mx-5 px-5 scrollbar-hide snap-x items-center">
-                  {availableDates.map((day, idx) => (
-                    <button
-                      key={day.id}
-                      onClick={() => setSelectedDateIdx(idx)}
-                      className={`snap-center flex-shrink-0 min-w-[90px] py-2.5 px-4 rounded-2xl flex flex-col items-center justify-center transition-all duration-300 border ${
-                        selectedDateIdx === idx
-                          ? `${t.tabActive} shadow-lg border-transparent scale-105`
-                          : `${t.tabInactive} hover:opacity-80 scale-100`
-                      }`}
-                    >
-                      <span className={`text-[15px] font-bold whitespace-nowrap`}>
-                        {day.shortDate}
-                      </span>
-                      {day.label && <span className="text-[10px] font-semibold uppercase tracking-wider mt-1 opacity-80">{day.label}</span>}
-                    </button>
+              <div className={`w-full p-6 rounded-3xl border flex flex-col items-center justify-center text-center gap-4 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} shadow-sm`}>
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-1 ${t.accentBg} ${t.accentText}`}>
+                  <Calendar size={24} />
+                </div>
+                <p className={`text-base font-bold ${t.cardTextMain}`}>
+                  {d.nearestWindows}
+                </p>
+                <div className="flex flex-wrap justify-center gap-2 w-full">
+                  {availableDates.map(day => (
+                    <span key={day.id} className={`px-4 py-2.5 rounded-xl text-sm font-bold border shadow-sm transition-colors duration-300 ${t.tabInactive}`}>
+                      {day.shortDate}
+                    </span>
                   ))}
                 </div>
-
-                {availableDates.length > 3 && (
-                  <div 
-                    className="absolute -right-5 top-0 bottom-4 w-16 pointer-events-none flex items-center justify-end pr-3 z-10"
-                    style={{ background: `linear-gradient(to right, transparent 0%, ${THEME_OPTIONS.find(o => o.id === theme).color} 70%)` }}
-                  >
-                    <ChevronRight size={24} className={`animate-[pulse_1.5s_ease-in-out_infinite] opacity-60 ${t.appTextMain}`} />
-                  </div>
-                )}
+                <p className={`text-xs font-medium mt-2 transition-colors duration-300 opacity-70 ${t.cardTextSub}`}>
+                  {d.availableDatesInfo}
+                </p>
               </div>
-
-              {availableDates[selectedDateIdx] && (
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 animate-[slideUp_0.3s_ease-out]">
-                  {availableDates[selectedDateIdx].times.map((time, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => openBooking(null, { 
-                        fullDate: availableDates[selectedDateIdx].fullDate, 
-                        displayDate: availableDates[selectedDateIdx].shortDate, 
-                        time: time 
-                      })}
-                      className={`py-3 rounded-xl font-bold text-base transition-all duration-300 active:scale-95 border ${t.cardBg} ${t.cardBorder} ${t.cardTextMain} hover:border-[currentColor] shadow-sm`}
-                    >
-                      {time}
-                    </button>
-                  ))}
-                </div>
-              )}
             </>
           )}
         </section>
 
+        {/* Прайс-лист как красивое меню без кнопок */}
         <section>
           <SectionTitle title={d.priceList} icon={Star} t={t} />
           
@@ -1117,16 +1018,9 @@ export default function App() {
                   {service.duration}
                 </div>
                 
-                <p className={`text-sm leading-relaxed mb-4 transition-colors duration-300 ${t.cardTextSub}`}>
+                <p className={`text-sm leading-relaxed transition-colors duration-300 ${t.cardTextSub}`}>
                   {service.description}
                 </p>
-                
-                <button 
-                  onClick={() => openBooking(service)}
-                  className={`w-full py-3 font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 active:scale-95 ${t.btnSecondary}`}
-                >
-                  {d.select}
-                </button>
               </div>
             ))}
           </div>
@@ -1176,8 +1070,7 @@ export default function App() {
         </section>
       </main>
 
-      <footer className={`mt-12 border-t py-10 px-5 flex flex-col items-center w-full transition-colors duration-300 relative z-10 pb-28 ${t.footerBg} ${t.footerBorder}`}>
-        
+      <footer className={`mt-12 border-t py-10 px-5 flex flex-col items-center w-full transition-colors duration-300 relative z-10 pb-32 ${t.footerBg} ${t.footerBorder}`}>
         <div className="w-full max-w-xs space-y-3 mb-8">
           <button 
             onClick={() => setIsQrOpen(true)}
@@ -1220,6 +1113,45 @@ export default function App() {
         <p className={`text-xs font-medium transition-colors duration-300 ${t.appTextSub}`}>© {new Date().getFullYear()} {data.master.name}. {d.rights}</p>
       </footer>
 
+      {/* Плавающая кнопка (FAB) и кнопка смены темы */}
+      <div className={`fixed bottom-6 left-0 right-0 z-[90] flex justify-center pointer-events-none transition-all duration-500 ease-out ${!bookingModal.isOpen && !isQrOpen ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="w-full max-w-md px-5 flex items-end justify-between gap-4">
+          
+          {/* Кнопка записи (появляется при скролле) */}
+          <div className={`flex-1 transition-all duration-500 ease-out ${showFab ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
+            <button
+              onClick={openBooking}
+              className={`w-full py-4 rounded-2xl font-bold text-lg shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 ${t.btnPrimary}`}
+            >
+              <Calendar size={20} />
+              {d.bookOnline}
+            </button>
+          </div>
+
+          {/* Смена тем */}
+          <div className="flex flex-col items-end gap-3 pointer-events-auto shrink-0">
+            <div className={`flex flex-col gap-2 transition-all duration-300 origin-bottom ${isThemeMenuOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}>
+              {THEME_OPTIONS.map(opt => (
+                <button
+                  key={opt.id}
+                  onClick={() => { setTheme(opt.id); setIsThemeMenuOpen(false); }}
+                  className={`w-12 h-12 rounded-full shadow-lg border-2 transition-transform active:scale-90 ${theme === opt.id ? 'scale-110' : 'scale-100'}`}
+                  style={{ backgroundColor: opt.color, borderColor: opt.border }}
+                  aria-label={`Switch to ${opt.id} theme`}
+                />
+              ))}
+            </div>
+            <button
+              onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
+              className={`w-14 h-14 rounded-full shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] flex items-center justify-center transition-all duration-300 active:scale-90 ${t.btnPrimary}`}
+            >
+              <Palette size={24} className="text-current" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Модалки: QR и Оформление записи */}
       {isQrOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div 
@@ -1314,7 +1246,7 @@ export default function App() {
                       className={`flex justify-between items-center w-full p-3.5 rounded-xl border cursor-pointer transition-all bg-white/50 backdrop-blur-sm shadow-sm ${t.inputBorder} ${openDropdown === 'time' ? 'ring-2 ' + t.inputFocusRing : ''}`}
                     >
                       <span className={`font-bold truncate pr-2 ${t.cardTextMain}`}>
-                        {bookingModal.slot ? `${bookingModal.slot.displayDate}, ${bookingModal.slot.time}` : d.willChooseInChat}
+                        {bookingModal.slot ? `${bookingModal.slot.displayDate}, ${bookingModal.slot.time}` : "..."}
                       </span>
                       <ChevronDown size={18} className={`transition-transform duration-300 flex-shrink-0 ${t.cardTextSub} ${openDropdown === 'time' ? 'rotate-180' : ''}`} />
                     </div>
