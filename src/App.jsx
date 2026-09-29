@@ -38,7 +38,43 @@ function WalletIcon(props) {
   );
 }
 
-const GOOGLE_APPS_SCRIPT_URL = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J4SkVWb2RocncwRF9GdnFMaktYcEpqRmJCZnZLNXpKd1g3NWQ0b3FObXBhMmNFc1doV25xMW56NkhscmRLUDJ6R0JwUS9leGVj'); 
+const GOOGLE_APPS_SCRIPT_URL = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J5YmFBb0YwZC1PcktYQ0I3WWpxWW1mcVJPeG56ejFLVXlKN0JZNGdIUVhON0owMUJHd09Fc21HV1haZzc1bW9weWp4dy9leGVj'); 
+
+const formatPhone = (val) => {
+  let v = val.replace(/\D/g, '');
+  if (!v) return '';
+
+  if (v.startsWith('7')) {
+    let res = '7';
+    if (v.length > 1) res += ` (${v.substring(1, 4)}`;
+    if (v.length > 4) res += `) ${v.substring(4, 7)}`;
+    if (v.length > 7) res += `-${v.substring(7, 9)}`;
+    if (v.length > 9) res += `-${v.substring(9, 11)}`;
+    return res;
+  }
+  
+  if (v.startsWith('374')) {
+    let res = '374';
+    if (v.length > 3) res += ` (${v.substring(3, 5)}`;
+    if (v.length > 5) res += `) ${v.substring(5, 11)}`;
+    return res;
+  }
+  
+  if (v.length <= 2) return v;
+  if (v.startsWith('3') || v.startsWith('4') || v.startsWith('8') || v.startsWith('9')) {
+     let res = v.substring(0, 2);
+     if (v.length > 2) res += ` (${v.substring(2, 5)}`;
+     if (v.length > 5) res += `) ${v.substring(5, 8)}`;
+     if (v.length > 8) res += `-${v.substring(8, 14)}`;
+     return res;
+  }
+  
+  let res = v.substring(0, 3);
+  if (v.length > 3) res += ` (${v.substring(3, 6)}`;
+  if (v.length > 6) res += `) ${v.substring(6, 10)}`;
+  if (v.length > 10) res += `-${v.substring(10, 15)}`;
+  return res;
+};
 
 const DICT = {
   hy: {
@@ -63,12 +99,12 @@ const DICT = {
     yourName: "Ձեր անունը",
     namePlaceholder: "Օրինակ՝ Աննա",
     phoneNum: "Հեռախոսահամար",
-    phonePlaceholder: "Օրինակ՝ +374 99 123456",
+    phonePlaceholder: "374 (99) 123456",
     commentLabel: "Մեկնաբանություն (ընտրովի)",
     commentPlaceholder: "Ցանկություններ, հարցեր...",
     waCheckbox: "WhatsApp-ը նույն համարով է",
     waLabel: "WhatsApp Համար",
-    waPlaceholder: "Օրինակ՝ +374 99 123456",
+    waPlaceholder: "374 (99) 123456",
     confirmBooking: "Հաստատել գրանցումը",
     sending: "Ուղարկվում է...",
     successTitle: "Հայտը ուղարկված է!",
@@ -115,12 +151,12 @@ const DICT = {
     yourName: "Ваше Имя",
     namePlaceholder: "Например, Анна",
     phoneNum: "Номер телефона",
-    phonePlaceholder: "Например: +374 99... / +7 900...",
+    phonePlaceholder: "374 (99) 123456",
     commentLabel: "Комментарий (необязательно)",
     commentPlaceholder: "Особенности, пожелания...",
     waCheckbox: "WhatsApp на этом же номере",
     waLabel: "Номер WhatsApp",
-    waPlaceholder: "Например: +374 99... / +7 900...",
+    waPlaceholder: "374 (99) 123456",
     confirmBooking: "Подтвердить запись",
     sending: "Оформляем...",
     successTitle: "Заявка отправлена!",
@@ -439,6 +475,7 @@ export default function App() {
   const [availableDates, setAvailableDates] = useState([]);
   const [isLoadingDates, setIsLoadingDates] = useState(true);
   const [selectedDateIdx, setSelectedDateIdx] = useState(0); 
+  const [isFetched, setIsFetched] = useState(false);
 
   const [activeCategory, setActiveCategory] = useState(data.services[0].category);
   const [toast, setToast] = useState({ visible: false, message: "" });
@@ -486,6 +523,8 @@ export default function App() {
   }, [lang]);
 
   useEffect(() => {
+    if (isFetched) return;
+    
     const fetchSlots = async () => {
       setIsLoadingDates(true);
       try {
@@ -502,11 +541,12 @@ export default function App() {
         setRawDates([]);
       } finally {
         setIsLoadingDates(false);
+        setIsFetched(true);
       }
     };
 
     fetchSlots();
-  }, []); 
+  }, [isFetched]); 
 
   useEffect(() => {
     if (rawDates.length > 0) {
@@ -605,17 +645,14 @@ export default function App() {
     e.preventDefault();
     setFormState(prev => ({ ...prev, isSubmitting: true }));
 
-    const finalPhone = formState.sameAsPhone 
-      ? formState.phone 
-      : `${formState.phone} (WA: ${formState.whatsapp})`;
-      
-    const finalName = formState.comment 
-      ? `${formState.name} (Комм: ${formState.comment})` 
-      : formState.name;
+    const cleanPhone = `+${formState.phone.replace(/\D/g, '')}`;
+    const cleanWa = formState.sameAsPhone ? cleanPhone : (formState.whatsapp ? `+${formState.whatsapp.replace(/\D/g, '')}` : '');
 
     const payload = {
-      name: finalName,
-      phone: finalPhone, 
+      name: formState.name,
+      phone: cleanPhone, 
+      whatsapp: cleanWa,
+      comment: formState.comment,
       service: bookingModal.service?.name || d.byAgreement,
       slot: bookingModal.slot ? `${bookingModal.slot.fullDate} ${bookingModal.slot.time}` : d.willChooseInChat,
       timestamp: new Date().toISOString()
@@ -789,7 +826,6 @@ export default function App() {
                 </div>
               )}
 
-              {}
               <div className="relative mb-5">
                 <div className="flex gap-2.5 overflow-x-auto pt-3 pb-4 -mx-5 px-5 scrollbar-hide snap-x items-center">
                   {availableDates.map((day, idx) => (
@@ -1005,7 +1041,6 @@ export default function App() {
         </div>
       )}
 
-      {}
       {bookingModal.isOpen && (
         <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 h-[100dvh]">
           <div 
@@ -1035,22 +1070,59 @@ export default function App() {
               <>
                 <h2 className={`text-2xl font-bold mb-6 transition-colors duration-300 ${t.cardTextMain}`}>{d.bookingTitle}</h2>
                 
-                <div className={`rounded-2xl p-4 mb-6 border transition-colors duration-300 ${t.inputBg} ${t.cardBorder}`}>
-                  <div className={`flex justify-between items-center border-b pb-3 mb-3 ${t.cardBorder}`}>
+                <div className={`rounded-2xl p-4 mb-6 border transition-colors duration-300 flex flex-col gap-3 ${t.inputBg} ${t.cardBorder}`}>
+                  
+                  <div className={`flex justify-between items-center border-b pb-3 ${t.cardBorder}`}>
                     <span className={`text-sm transition-colors duration-300 ${t.cardTextSub}`}>{d.service}</span>
-                    <span className={`font-semibold text-right max-w-[60%] truncate transition-colors duration-300 ${t.cardTextMain}`}>
-                      {bookingModal.service?.name || d.byAgreement}
-                    </span>
+                    <select 
+                      value={bookingModal.service?.id || ""}
+                      onChange={(e) => {
+                        const srv = data.services.find(s => s.id === e.target.value);
+                        setBookingModal(prev => ({ ...prev, service: srv || null }));
+                      }}
+                      className={`font-semibold bg-transparent text-right outline-none appearance-none max-w-[65%] truncate transition-colors duration-300 cursor-pointer ${t.cardTextMain}`}
+                    >
+                      <option value="">{d.byAgreement}</option>
+                      {data.services.map(s => (
+                        <option key={s.id} value={s.id}>{s.name}</option>
+                      ))}
+                    </select>
                   </div>
+
                   <div className="flex justify-between items-center">
                     <span className={`text-sm transition-colors duration-300 ${t.cardTextSub}`}>{d.time}</span>
-                    <span className={`font-semibold text-right transition-colors duration-300 ${t.cardTextMain}`}>
-                      {bookingModal.slot ? `${bookingModal.slot.displayDate}, ${bookingModal.slot.time}` : d.willChooseInChat}
-                    </span>
+                    <select 
+                      value={bookingModal.slot ? `${bookingModal.slot.fullDate}|${bookingModal.slot.time}` : ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (!val) {
+                          setBookingModal(prev => ({ ...prev, slot: null }));
+                          return;
+                        }
+                        const [fDate, fTime] = val.split('|');
+                        const dayObj = availableDates.find(d => d.fullDate === fDate);
+                        if (dayObj) {
+                          setBookingModal(prev => ({ ...prev, slot: { fullDate: fDate, displayDate: dayObj.shortDate, time: fTime } }));
+                        }
+                      }}
+                      className={`font-semibold bg-transparent text-right outline-none appearance-none max-w-[65%] truncate transition-colors duration-300 cursor-pointer ${t.cardTextMain}`}
+                    >
+                      <option value="">{d.willChooseInChat}</option>
+                      {availableDates.map(day => (
+                        <optgroup key={day.id} label={day.shortDate}>
+                          {day.times.map(time => (
+                            <option key={`${day.fullDate}|${time}`} value={`${day.fullDate}|${time}`}>
+                              {day.shortDate}, {time}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
+                    </select>
                   </div>
+
                 </div>
 
-                <form onSubmit={handleBookingSubmit} className="space-y-3">
+                <form onSubmit={handleBookingSubmit} className="space-y-4">
                   <div>
                     <label className={`block text-sm font-semibold mb-1.5 ml-1 transition-colors duration-300 ${t.cardTextMain}`}>{d.yourName}</label>
                     <div className={`rounded-2xl border transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
@@ -1067,25 +1139,26 @@ export default function App() {
                   
                   <div>
                     <label className={`block text-sm font-semibold mb-1.5 ml-1 transition-colors duration-300 ${t.cardTextMain}`}>{d.phoneNum}</label>
-                    <div className={`rounded-2xl border transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
+                    <div className={`rounded-2xl border flex items-center transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
+                      <span className={`pl-4 pr-1 font-medium transition-colors duration-300 opacity-60 ${t.cardTextMain}`}>+</span>
                       <input 
                         type="tel" 
                         required
                         value={formState.phone}
                         onChange={e => {
-                          const val = e.target.value;
+                          const val = formatPhone(e.target.value);
                           setFormState(prev => ({ ...prev, phone: val, ...(prev.sameAsPhone ? {whatsapp: val} : {}) }))
                         }}
                         placeholder={d.phonePlaceholder} 
-                        className={`w-full px-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`}
+                        className={`w-full pr-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`}
                       />
                     </div>
                     
-                    <label className="flex items-center gap-2 mt-2 mb-1 ml-1 cursor-pointer w-max">
+                    <label className="flex items-center gap-2 mt-2 ml-1 cursor-pointer w-max">
                       <input 
                           type="checkbox" 
                           checked={formState.sameAsPhone}
-                          onChange={e => setFormState(prev => ({ ...prev, sameAsPhone: e.target.checked, whatsapp: e.target.checked ? prev.phone : prev.whatsapp }))}
+                          onChange={e => setFormState(prev => ({ ...prev, sameAsPhone: e.target.checked, whatsapp: e.target.checked ? prev.phone : "" }))}
                           className="w-4 h-4 rounded border-gray-300 text-[#D4A373] focus:ring-[#D4A373] accent-current"
                       />
                       <span className={`text-xs font-medium transition-colors duration-300 ${t.cardTextSub}`}>{d.waCheckbox}</span>
@@ -1095,14 +1168,18 @@ export default function App() {
                   {!formState.sameAsPhone && (
                     <div className="animate-[slideUp_0.2s_ease-out]">
                       <label className={`block text-sm font-semibold mb-1.5 ml-1 transition-colors duration-300 ${t.cardTextMain}`}>{d.waLabel}</label>
-                      <div className={`rounded-2xl border transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
+                      <div className={`rounded-2xl border flex items-center transition-all duration-300 ${t.inputBg} ${t.inputBorder} ${t.inputFocusRing}`}>
+                        <span className={`pl-4 pr-1 font-medium transition-colors duration-300 opacity-60 ${t.cardTextMain}`}>+</span>
                         <input 
                           type="tel" 
                           required={!formState.sameAsPhone}
                           value={formState.whatsapp}
-                          onChange={e => setFormState(prev => ({ ...prev, whatsapp: e.target.value }))}
+                          onChange={e => {
+                            const val = formatPhone(e.target.value);
+                            setFormState(prev => ({ ...prev, whatsapp: val }))
+                          }}
                           placeholder={d.waPlaceholder} 
-                          className={`w-full px-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`}
+                          className={`w-full pr-4 py-3.5 bg-transparent focus:outline-none font-medium placeholder:opacity-40 ${t.inputText}`}
                         />
                       </div>
                     </div>
@@ -1124,7 +1201,7 @@ export default function App() {
                   <button 
                     type="submit" 
                     disabled={formState.isSubmitting}
-                    className={`w-full mt-4 py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:active:scale-100 ${t.btnPrimary}`}
+                    className={`w-full mt-2 py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:active:scale-100 ${t.btnPrimary}`}
                   >
                     {formState.isSubmitting ? (
                       <span className="flex items-center gap-2">
