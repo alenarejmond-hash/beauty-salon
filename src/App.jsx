@@ -63,7 +63,7 @@ const formatPhone = (val) => {
 const DICT = {
   hy: {
     spec: "Մատնահարդար և Էսթետիկայի Վարպետ",
-    location: "Էջմիածին",
+    location: "Էջմիածին, Մաշտոցի փող., 48",
     status: "Ընդունումը գրանցումով",
     bookOnline: "Գրանցվել առցանց",
     availableSlots: "Ազատ պատուհաններ",
@@ -80,7 +80,7 @@ const DICT = {
     installApp: "Տեղադրել հավելվածը (PWA)",
     scanQr: "Սկանավորեք արագ մուտքի համար",
     bookingTitle: "Գրանցման ձևակերպում",
-    service: "Ծառայություն",
+    service: "Ծառայություն (մինչև 2)",
     time: "Ժամանակ",
     yourName: "Ձեր անունը",
     namePlaceholder: "Օրինակ՝ Աննա",
@@ -97,6 +97,8 @@ const DICT = {
     successText: "Շնորհակալություն: Ես կկապվեմ ձեզ հետ շուտով հաստատման համար:",
     copied: "Պատճենված է",
     copyError: "Պատճենման սխալ",
+    submitError: "Ուղարկման սխալ: Ստուգեք ինտերնետ կապը:",
+    slotTakenError: "Ներողություն, այս ժամն արդեն զբաղված է: Խնդրում ենք ընտրել այլ ժամ:",
     installHint: 'Սեղմեք "Կիսվել" և ընտրեք "Ավելացնել էկրանին"',
     loadingSlots: "Համաժամացում...",
     noSlots: "Այս պահին ազատ պատուհաններ չկան կամ վարպետը արձակուրդում է 🌴 Մոտ օրերս նոր պատուհաններ կավելանան:",
@@ -152,6 +154,8 @@ const DICT = {
     successText: "Спасибо! Я свяжусь с вами в ближайшее время для подтверждения записи.",
     copied: "Скопировано в буфер!",
     copyError: "Ошибка копирования",
+    submitError: "Ошибка отправки. Проверьте интернет или попробуйте позже.",
+    slotTakenError: "К сожалению, это время только что заняли. Пожалуйста, выберите другое.",
     installHint: 'Нажмите "Поделиться" -> "На экран Домой"',
     loadingSlots: "Синхронизация расписания...",
     noSlots: "Свободных окон пока нет или мастер в отпуске 🌴 Окошки скоро появятся.",
@@ -173,7 +177,7 @@ const DICT = {
   },
   en: {
     spec: "Nail & Aesthetic Master",
-    location: "Echmiadzin",
+    location: "Echmiadzin, Mashtots st., 48",
     status: "By appointment",
     bookOnline: "Book Online",
     availableSlots: "Available Slots",
@@ -207,6 +211,8 @@ const DICT = {
     successText: "Thank you! I will contact you shortly to confirm the appointment.",
     copied: "Copied!",
     copyError: "Copy error",
+    submitError: "Sending error. Check your connection or try again later.",
+    slotTakenError: "Sorry, this slot was just taken. Please choose another time.",
     installHint: 'Tap "Share" and select "Add to Home Screen"',
     loadingSlots: "Syncing schedule...",
     noSlots: "No available slots at the moment or the master is on vacation 🌴 New slots will appear soon.",
@@ -232,7 +238,7 @@ const getMockData = (lang) => ({
   master: {
     name: lang === 'hy' ? "Անի Սարգսյան" : (lang === 'en' ? "Ani Sargsyan" : "Ани Саркисян"),
     specialization: DICT[lang].spec,
-    location: lang === 'hy' ? "Էջմիածին, Մաշտոցի փող., 48" : (lang === 'en' ? "Echmiadzin, Mashtots st., 48" : "г. Эчмиадзин, ул. Маштоца, 48"),
+    location: DICT[lang].location,
     mapUrl: "https://www.google.com/maps/search/?api=1&query=Эчмиадзин+Маштоца+48",
     avatar: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80",
     status: DICT[lang].status
@@ -302,238 +308,82 @@ const getMockData = (lang) => ({
 
 const THEMES = {
   obsidian: {
-    appBg: "bg-[#0F0F11]",
-    appTextMain: "text-[#F4E8C1]",
-    appTextSub: "text-[#F4E8C1]/60",
-    headerBg: "bg-[#18181C]",
-    avatarBorder: "border-[#18181C]",
-    glow: "bg-[#D4AF37]/15",
-    cardBg: "bg-[#18181C]",
-    cardBorder: "border-[#2A2A30]",
-    cardTextMain: "text-[#F4E8C1]",
-    cardTextSub: "text-[#F4E8C1]/50",
-    btnPrimary: "bg-[#D4AF37] text-black font-semibold shadow-[#D4AF37]/10",
-    accentText: "text-[#D4AF37]",
-    accentBg: "bg-[#D4AF37]/10",
-    badgeBg: "bg-[#2A2A30]",
-    badgeText: "text-[#F4E8C1]",
-    statusBadgeBg: "bg-[#D4AF37]/10",
-    statusBadgeText: "text-[#D4AF37]",
-    tabActive: "bg-[#D4AF37] text-black",
-    tabInactive: "bg-[#18181C] text-[#F4E8C1]/60 border-[#2A2A30]",
-    btnSecondary: "bg-[#2A2A30] text-[#F4E8C1] hover:bg-[#3A3A40]",
-    iconWrapper: "bg-[#2A2A30] text-[#D4AF37]",
-    policyBg: "bg-[#18181C]",
-    bullet: "bg-[#D4AF37]",
-    footerBg: "bg-[#18181C]",
-    footerBorder: "border-[#2A2A30]",
-    modalBg: "bg-[#18181C]",
-    grabber: "bg-[#2A2A30]",
-    inputBg: "bg-[#0F0F11] focus-within:bg-[#18181C]",
-    inputBorder: "border-transparent focus-within:border-[#D4AF37]",
-    inputFocusRing: "focus-within:ring-[#D4AF37]/30",
-    inputText: "text-[#F4E8C1]",
-    successIcon: "text-emerald-400",
-    successBg: "bg-emerald-400/10",
-    statusDotBg: "bg-emerald-400",
-    cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.4)]",
-    pillBg: "bg-white/5",
-    skeletonBg: "bg-white/5",
+    appBg: "bg-[#0F0F11]", appTextMain: "text-[#F4E8C1]", appTextSub: "text-[#F4E8C1]/60", headerBg: "bg-[#18181C]",
+    avatarBorder: "border-[#18181C]", glow: "bg-[#D4AF37]/15", cardBg: "bg-[#18181C]", cardBorder: "border-[#2A2A30]",
+    cardTextMain: "text-[#F4E8C1]", cardTextSub: "text-[#F4E8C1]/50", btnPrimary: "bg-[#D4AF37] text-black font-semibold shadow-[#D4AF37]/10",
+    accentText: "text-[#D4AF37]", accentBg: "bg-[#D4AF37]/10", badgeBg: "bg-[#2A2A30]", badgeText: "text-[#F4E8C1]",
+    statusBadgeBg: "bg-[#D4AF37]/10", statusBadgeText: "text-[#D4AF37]", tabActive: "bg-[#D4AF37] text-black",
+    tabInactive: "bg-[#18181C] text-[#F4E8C1]/60 border-[#2A2A30]", btnSecondary: "bg-[#2A2A30] text-[#F4E8C1] hover:bg-[#3A3A40]",
+    iconWrapper: "bg-[#2A2A30] text-[#D4AF37]", policyBg: "bg-[#18181C]", bullet: "bg-[#D4AF37]", footerBg: "bg-[#18181C]",
+    footerBorder: "border-[#2A2A30]", modalBg: "bg-[#18181C]", grabber: "bg-[#2A2A30]", inputBg: "bg-[#0F0F11] focus-within:bg-[#18181C]",
+    inputBorder: "border-transparent focus-within:border-[#D4AF37]", inputFocusRing: "focus-within:ring-[#D4AF37]/30",
+    inputText: "text-[#F4E8C1]", successIcon: "text-emerald-400", successBg: "bg-emerald-400/10", statusDotBg: "bg-emerald-400",
+    cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.4)]", pillBg: "bg-white/5", skeletonBg: "bg-white/5",
   },
   emerald: {
-    appBg: "bg-[#0B1D17]",
-    appTextMain: "text-[#F1F5F9]",
-    appTextSub: "text-[#F1F5F9]/60",
-    headerBg: "bg-[#132E25]",
-    avatarBorder: "border-[#132E25]",
-    glow: "bg-[#5EEAD4]/10",
-    cardBg: "bg-[#132E25]",
-    cardBorder: "border-[#1F4538]",
-    cardTextMain: "text-[#F1F5F9]",
-    cardTextSub: "text-[#F1F5F9]/50",
-    btnPrimary: "bg-[#5EEAD4] text-[#0B1D17] font-semibold shadow-[#5EEAD4]/10",
-    accentText: "text-[#5EEAD4]",
-    accentBg: "bg-[#5EEAD4]/10",
-    badgeBg: "bg-[#1F4538]",
-    badgeText: "text-[#F1F5F9]",
-    statusBadgeBg: "bg-[#5EEAD4]/10",
-    statusBadgeText: "text-[#5EEAD4]",
-    tabActive: "bg-[#5EEAD4] text-[#0B1D17]",
-    tabInactive: "bg-[#132E25] text-[#F1F5F9]/60 border-[#1F4538]",
-    btnSecondary: "bg-[#1F4538] text-[#F1F5F9] hover:bg-[#2A5A4A]",
-    iconWrapper: "bg-[#1F4538] text-[#5EEAD4]",
-    policyBg: "bg-[#132E25]",
-    bullet: "bg-[#5EEAD4]",
-    footerBg: "bg-[#132E25]",
-    footerBorder: "border-[#1F4538]",
-    modalBg: "bg-[#132E25]",
-    grabber: "bg-[#1F4538]",
-    inputBg: "bg-[#0B1D17] focus-within:bg-[#132E25]",
-    inputBorder: "border-transparent focus-within:border-[#5EEAD4]",
-    inputFocusRing: "focus-within:ring-[#5EEAD4]/30",
-    inputText: "text-[#F1F5F9]",
-    successIcon: "text-[#5EEAD4]",
-    successBg: "bg-[#5EEAD4]/10",
-    statusDotBg: "bg-[#5EEAD4]",
-    cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.3)]",
-    pillBg: "bg-white/5",
-    skeletonBg: "bg-white/5",
+    appBg: "bg-[#0B1D17]", appTextMain: "text-[#F1F5F9]", appTextSub: "text-[#F1F5F9]/60", headerBg: "bg-[#132E25]",
+    avatarBorder: "border-[#132E25]", glow: "bg-[#5EEAD4]/10", cardBg: "bg-[#132E25]", cardBorder: "border-[#1F4538]",
+    cardTextMain: "text-[#F1F5F9]", cardTextSub: "text-[#F1F5F9]/50", btnPrimary: "bg-[#5EEAD4] text-[#0B1D17] font-semibold shadow-[#5EEAD4]/10",
+    accentText: "text-[#5EEAD4]", accentBg: "bg-[#5EEAD4]/10", badgeBg: "bg-[#1F4538]", badgeText: "text-[#F1F5F9]",
+    statusBadgeBg: "bg-[#5EEAD4]/10", statusBadgeText: "text-[#5EEAD4]", tabActive: "bg-[#5EEAD4] text-[#0B1D17]",
+    tabInactive: "bg-[#132E25] text-[#F1F5F9]/60 border-[#1F4538]", btnSecondary: "bg-[#1F4538] text-[#F1F5F9] hover:bg-[#2A5A4A]",
+    iconWrapper: "bg-[#1F4538] text-[#5EEAD4]", policyBg: "bg-[#132E25]", bullet: "bg-[#5EEAD4]", footerBg: "bg-[#132E25]",
+    footerBorder: "border-[#1F4538]", modalBg: "bg-[#132E25]", grabber: "bg-[#1F4538]", inputBg: "bg-[#0B1D17] focus-within:bg-[#132E25]",
+    inputBorder: "border-transparent focus-within:border-[#5EEAD4]", inputFocusRing: "focus-within:ring-[#5EEAD4]/30",
+    inputText: "text-[#F1F5F9]", successIcon: "text-[#5EEAD4]", successBg: "bg-[#5EEAD4]/10", statusDotBg: "bg-[#5EEAD4]",
+    cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.3)]", pillBg: "bg-white/5", skeletonBg: "bg-white/5",
   },
   rose: {
-    appBg: "bg-[#FCF7F8]",
-    appTextMain: "text-[#5C3A41]",
-    appTextSub: "text-[#5C3A41]/70",
-    headerBg: "bg-white",
-    avatarBorder: "border-white",
-    glow: "bg-[#F2A4B3]/20",
-    cardBg: "bg-white",
-    cardBorder: "border-[#F7DADD]",
-    cardTextMain: "text-[#5C3A41]",
-    cardTextSub: "text-[#5C3A41]/60",
-    btnPrimary: "bg-[#F2A4B3] text-white font-semibold shadow-[#F2A4B3]/30",
-    accentText: "text-[#E07A8F]",
-    accentBg: "bg-[#F2A4B3]/15",
-    badgeBg: "bg-[#F2A4B3]/10",
-    badgeText: "text-[#E07A8F]",
-    statusBadgeBg: "bg-[#F2A4B3]/15",
-    statusBadgeText: "text-[#E07A8F]",
-    tabActive: "bg-[#5C3A41] text-white",
-    tabInactive: "bg-white text-[#5C3A41]/70 border-[#F7DADD]",
-    btnSecondary: "bg-[#FCF7F8] text-[#5C3A41] hover:bg-[#F7EAEB]",
-    iconWrapper: "bg-[#FCF7F8] text-[#E07A8F]",
-    policyBg: "bg-[#F2A4B3]/5",
-    bullet: "bg-[#E07A8F]",
-    footerBg: "bg-white",
-    footerBorder: "border-[#F7DADD]",
-    modalBg: "bg-white",
-    grabber: "bg-[#F7DADD]",
-    inputBg: "bg-[#FCF7F8] focus-within:bg-white",
-    inputBorder: "border-transparent focus-within:border-[#F2A4B3]",
-    inputFocusRing: "focus-within:ring-[#F2A4B3]/30",
-    inputText: "text-[#5C3A41]",
-    successIcon: "text-[#E07A8F]",
-    successBg: "bg-[#F2A4B3]/20",
-    statusDotBg: "bg-[#E07A8F]",
-    cardShadow: "shadow-[0_4px_20px_-8px_rgba(242,164,179,0.15)]",
-    pillBg: "bg-[#F2A4B3]/15",
-    skeletonBg: "bg-[#F7DADD]/50",
+    appBg: "bg-[#FCF7F8]", appTextMain: "text-[#5C3A41]", appTextSub: "text-[#5C3A41]/70", headerBg: "bg-white",
+    avatarBorder: "border-white", glow: "bg-[#F2A4B3]/20", cardBg: "bg-white", cardBorder: "border-[#F7DADD]",
+    cardTextMain: "text-[#5C3A41]", cardTextSub: "text-[#5C3A41]/60", btnPrimary: "bg-[#F2A4B3] text-white font-semibold shadow-[#F2A4B3]/30",
+    accentText: "text-[#E07A8F]", accentBg: "bg-[#F2A4B3]/15", badgeBg: "bg-[#F2A4B3]/10", badgeText: "text-[#E07A8F]",
+    statusBadgeBg: "bg-[#F2A4B3]/15", statusBadgeText: "text-[#E07A8F]", tabActive: "bg-[#5C3A41] text-white",
+    tabInactive: "bg-white text-[#5C3A41]/70 border-[#F7DADD]", btnSecondary: "bg-[#FCF7F8] text-[#5C3A41] hover:bg-[#F7EAEB]",
+    iconWrapper: "bg-[#FCF7F8] text-[#E07A8F]", policyBg: "bg-[#F2A4B3]/5", bullet: "bg-[#E07A8F]", footerBg: "bg-white",
+    footerBorder: "border-[#F7DADD]", modalBg: "bg-white", grabber: "bg-[#F7DADD]", inputBg: "bg-[#FCF7F8] focus-within:bg-white",
+    inputBorder: "border-transparent focus-within:border-[#F2A4B3]", inputFocusRing: "focus-within:ring-[#F2A4B3]/30",
+    inputText: "text-[#5C3A41]", successIcon: "text-[#E07A8F]", successBg: "bg-[#F2A4B3]/20", statusDotBg: "bg-[#E07A8F]",
+    cardShadow: "shadow-[0_4px_20px_-8px_rgba(242,164,179,0.15)]", pillBg: "bg-[#F2A4B3]/15", skeletonBg: "bg-[#F7DADD]/50",
   },
   lavender: {
-    appBg: "bg-[#F9F9FE]",
-    appTextMain: "text-[#3D3B4A]",
-    appTextSub: "text-[#3D3B4A]/70",
-    headerBg: "bg-white",
-    avatarBorder: "border-white",
-    glow: "bg-[#B3A4F2]/20",
-    cardBg: "bg-white",
-    cardBorder: "border-[#E4DDF7]",
-    cardTextMain: "text-[#3D3B4A]",
-    cardTextSub: "text-[#3D3B4A]/60",
-    btnPrimary: "bg-[#B3A4F2] text-white font-semibold shadow-[#B3A4F2]/30",
-    accentText: "text-[#8E79DF]",
-    accentBg: "bg-[#B3A4F2]/15",
-    badgeBg: "bg-[#B3A4F2]/10",
-    badgeText: "text-[#8E79DF]",
-    statusBadgeBg: "bg-[#B3A4F2]/15",
-    statusBadgeText: "text-[#8E79DF]",
-    tabActive: "bg-[#3D3B4A] text-white",
-    tabInactive: "bg-white text-[#3D3B4A]/70 border-[#E4DDF7]",
-    btnSecondary: "bg-[#F9F9FE] text-[#3D3B4A] hover:bg-[#EBEAF5]",
-    iconWrapper: "bg-[#F9F9FE] text-[#8E79DF]",
-    policyBg: "bg-[#B3A4F2]/5",
-    bullet: "bg-[#8E79DF]",
-    footerBg: "bg-white",
-    footerBorder: "border-[#E4DDF7]",
-    modalBg: "bg-white",
-    grabber: "bg-[#E4DDF7]",
-    inputBg: "bg-[#F9F9FE] focus-within:bg-white",
-    inputBorder: "border-transparent focus-within:border-[#B3A4F2]",
-    inputFocusRing: "focus-within:ring-[#B3A4F2]/30",
-    inputText: "text-[#3D3B4A]",
-    successIcon: "text-[#8E79DF]",
-    successBg: "bg-[#B3A4F2]/20",
-    statusDotBg: "bg-[#8E79DF]",
-    cardShadow: "shadow-[0_4px_20px_-8px_rgba(179,164,242,0.15)]",
-    pillBg: "bg-[#B3A4F2]/15",
-    skeletonBg: "bg-[#E4DDF7]/50",
+    appBg: "bg-[#F9F9FE]", appTextMain: "text-[#3D3B4A]", appTextSub: "text-[#3D3B4A]/70", headerBg: "bg-white",
+    avatarBorder: "border-white", glow: "bg-[#B3A4F2]/20", cardBg: "bg-white", cardBorder: "border-[#E4DDF7]",
+    cardTextMain: "text-[#3D3B4A]", cardTextSub: "text-[#3D3B4A]/60", btnPrimary: "bg-[#B3A4F2] text-white font-semibold shadow-[#B3A4F2]/30",
+    accentText: "text-[#8E79DF]", accentBg: "bg-[#B3A4F2]/15", badgeBg: "bg-[#B3A4F2]/10", badgeText: "text-[#8E79DF]",
+    statusBadgeBg: "bg-[#B3A4F2]/15", statusBadgeText: "text-[#8E79DF]", tabActive: "bg-[#3D3B4A] text-white",
+    tabInactive: "bg-white text-[#3D3B4A]/70 border-[#E4DDF7]", btnSecondary: "bg-[#F9F9FE] text-[#3D3B4A] hover:bg-[#EBEAF5]",
+    iconWrapper: "bg-[#F9F9FE] text-[#8E79DF]", policyBg: "bg-[#B3A4F2]/5", bullet: "bg-[#8E79DF]", footerBg: "bg-white",
+    footerBorder: "border-[#E4DDF7]", modalBg: "bg-white", grabber: "bg-[#E4DDF7]", inputBg: "bg-[#F9F9FE] focus-within:bg-white",
+    inputBorder: "border-transparent focus-within:border-[#B3A4F2]", inputFocusRing: "focus-within:ring-[#B3A4F2]/30",
+    inputText: "text-[#3D3B4A]", successIcon: "text-[#8E79DF]", successBg: "bg-[#B3A4F2]/20", statusDotBg: "bg-[#8E79DF]",
+    cardShadow: "shadow-[0_4px_20px_-8px_rgba(179,164,242,0.15)]", pillBg: "bg-[#B3A4F2]/15", skeletonBg: "bg-[#E4DDF7]/50",
   },
   carbon: {
-    appBg: "bg-[#111111]",
-    appTextMain: "text-[#EAEAEA]",
-    appTextSub: "text-[#A0A0A0]",
-    headerBg: "bg-[#1A1A1A]",
-    avatarBorder: "border-[#1A1A1A]",
-    glow: "bg-[#FFFFFF]/5",
-    cardBg: "bg-[#1A1A1A]",
-    cardBorder: "border-[#2A2A2A]",
-    cardTextMain: "text-[#EAEAEA]",
-    cardTextSub: "text-[#A0A0A0]",
-    btnPrimary: "bg-white text-black font-semibold shadow-white/10",
-    accentText: "text-white",
-    accentBg: "bg-white/10",
-    badgeBg: "bg-[#2A2A2A]",
-    badgeText: "text-[#EAEAEA]",
-    statusBadgeBg: "bg-white/10",
-    statusBadgeText: "text-white",
-    tabActive: "bg-white text-black",
-    tabInactive: "bg-[#1A1A1A] text-[#A0A0A0] border-[#2A2A2A]",
-    btnSecondary: "bg-[#2A2A2A] text-[#EAEAEA] hover:bg-[#333333]",
-    iconWrapper: "bg-[#2A2A2A] text-white",
-    policyBg: "bg-[#1A1A1A]",
-    bullet: "bg-white",
-    footerBg: "bg-[#1A1A1A]",
-    footerBorder: "border-[#2A2A2A]",
-    modalBg: "bg-[#1A1A1A]",
-    grabber: "bg-[#2A2A2A]",
-    inputBg: "bg-[#111111] focus-within:bg-[#1A1A1A]",
-    inputBorder: "border-transparent focus-within:border-white/50",
-    inputFocusRing: "focus-within:ring-white/20",
-    inputText: "text-[#EAEAEA]",
-    successIcon: "text-white",
-    successBg: "bg-white/20",
-    statusDotBg: "bg-white",
-    cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]",
-    pillBg: "bg-white/10",
-    skeletonBg: "bg-white/5",
+    appBg: "bg-[#111111]", appTextMain: "text-[#EAEAEA]", appTextSub: "text-[#A0A0A0]", headerBg: "bg-[#1A1A1A]",
+    avatarBorder: "border-[#1A1A1A]", glow: "bg-[#FFFFFF]/5", cardBg: "bg-[#1A1A1A]", cardBorder: "border-[#2A2A2A]",
+    cardTextMain: "text-[#EAEAEA]", cardTextSub: "text-[#A0A0A0]", btnPrimary: "bg-white text-black font-semibold shadow-white/10",
+    accentText: "text-white", accentBg: "bg-white/10", badgeBg: "bg-[#2A2A2A]", badgeText: "text-[#EAEAEA]",
+    statusBadgeBg: "bg-white/10", statusBadgeText: "text-white", tabActive: "bg-white text-black",
+    tabInactive: "bg-[#1A1A1A] text-[#A0A0A0] border-[#2A2A2A]", btnSecondary: "bg-[#2A2A2A] text-[#EAEAEA] hover:bg-[#333333]",
+    iconWrapper: "bg-[#2A2A2A] text-white", policyBg: "bg-[#1A1A1A]", bullet: "bg-white", footerBg: "bg-[#1A1A1A]",
+    footerBorder: "border-[#2A2A2A]", modalBg: "bg-[#1A1A1A]", grabber: "bg-[#2A2A2A]", inputBg: "bg-[#111111] focus-within:bg-[#1A1A1A]",
+    inputBorder: "border-transparent focus-within:border-white/50", inputFocusRing: "focus-within:ring-white/20",
+    inputText: "text-[#EAEAEA]", successIcon: "text-white", successBg: "bg-white/20", statusDotBg: "bg-white",
+    cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]", pillBg: "bg-white/10", skeletonBg: "bg-white/5",
   },
   cognac: {
-    appBg: "bg-[#140D0B]",
-    appTextMain: "text-[#F3E6D9]",
-    appTextSub: "text-[#F3E6D9]/60",
-    headerBg: "bg-[#1C1310]",
-    avatarBorder: "border-[#1C1310]",
-    glow: "bg-[#D97736]/15",
-    cardBg: "bg-[#1C1310]",
-    cardBorder: "border-[#2D1F1A]",
-    cardTextMain: "text-[#F3E6D9]",
-    cardTextSub: "text-[#F3E6D9]/50",
-    btnPrimary: "bg-[#D97736] text-white font-semibold shadow-[#D97736]/20",
-    accentText: "text-[#D97736]",
-    accentBg: "bg-[#D97736]/10",
-    badgeBg: "bg-[#2D1F1A]",
-    badgeText: "text-[#F3E6D9]",
-    statusBadgeBg: "bg-[#D97736]/10",
-    statusBadgeText: "text-[#D97736]",
-    tabActive: "bg-[#D97736] text-white",
-    tabInactive: "bg-[#1C1310] text-[#F3E6D9]/60 border-[#2D1F1A]",
-    btnSecondary: "bg-[#2D1F1A] text-[#F3E6D9] hover:bg-[#3A2822]",
-    iconWrapper: "bg-[#2D1F1A] text-[#D97736]",
-    policyBg: "bg-[#1C1310]",
-    bullet: "bg-[#D97736]",
-    footerBg: "bg-[#1C1310]",
-    footerBorder: "border-[#2D1F1A]",
-    modalBg: "bg-[#1C1310]",
-    grabber: "bg-[#2D1F1A]",
-    inputBg: "bg-[#140D0B] focus-within:bg-[#1C1310]",
-    inputBorder: "border-transparent focus-within:border-[#D97736]",
-    inputFocusRing: "focus-within:ring-[#D97736]/30",
-    inputText: "text-[#F3E6D9]",
-    successIcon: "text-[#D97736]",
-    successBg: "bg-[#D97736]/15",
-    statusDotBg: "bg-[#D97736]",
-    cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]",
-    pillBg: "bg-white/5",
-    skeletonBg: "bg-white/5",
+    appBg: "bg-[#140D0B]", appTextMain: "text-[#F3E6D9]", appTextSub: "text-[#F3E6D9]/60", headerBg: "bg-[#1C1310]",
+    avatarBorder: "border-[#1C1310]", glow: "bg-[#D97736]/15", cardBg: "bg-[#1C1310]", cardBorder: "border-[#2D1F1A]",
+    cardTextMain: "text-[#F3E6D9]", cardTextSub: "text-[#F3E6D9]/50", btnPrimary: "bg-[#D97736] text-white font-semibold shadow-[#D97736]/20",
+    accentText: "text-[#D97736]", accentBg: "bg-[#D97736]/10", badgeBg: "bg-[#2D1F1A]", badgeText: "text-[#F3E6D9]",
+    statusBadgeBg: "bg-[#D97736]/10", statusBadgeText: "text-[#D97736]", tabActive: "bg-[#D97736] text-white",
+    tabInactive: "bg-[#1C1310] text-[#F3E6D9]/60 border-[#2D1F1A]", btnSecondary: "bg-[#2D1F1A] text-[#F3E6D9] hover:bg-[#3A2822]",
+    iconWrapper: "bg-[#2D1F1A] text-[#D97736]", policyBg: "bg-[#1C1310]", bullet: "bg-[#D97736]", footerBg: "bg-[#1C1310]",
+    footerBorder: "border-[#2D1F1A]", modalBg: "bg-[#1C1310]", grabber: "bg-[#2D1F1A]", inputBg: "bg-[#140D0B] focus-within:bg-[#1C1310]",
+    inputBorder: "border-transparent focus-within:border-[#D97736]", inputFocusRing: "focus-within:ring-[#D97736]/30",
+    inputText: "text-[#F3E6D9]", successIcon: "text-[#D97736]", successBg: "bg-[#D97736]/15", statusDotBg: "bg-[#D97736]",
+    cardShadow: "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]", pillBg: "bg-white/5", skeletonBg: "bg-white/5",
   }
 };
 
@@ -546,17 +396,17 @@ const THEME_OPTIONS = [
   { id: 'lavender', color: '#F9F9FE', border: '#B3A4F2' }
 ];
 
-const Toast = ({ message, isVisible }) => (
+const Toast = ({ message, isVisible, isError = false }) => (
   <div 
     className={`fixed left-1/2 -translate-x-1/2 z-[200] px-5 py-3.5 rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.5)] flex items-center gap-3 transition-all duration-400 ease-out border-2 bg-zinc-900 text-white border-zinc-700 ${
       isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-12 scale-90 pointer-events-none'
     }`}
     style={{ top: 'calc(1.5rem + env(safe-area-inset-top))' }}
   >
-    <div className="bg-emerald-500 rounded-full p-1 text-black flex-shrink-0 flex items-center justify-center">
-      <Check size={14} strokeWidth={4} />
+    <div className={`rounded-full p-1 text-black flex-shrink-0 flex items-center justify-center ${isError ? 'bg-red-500' : 'bg-emerald-500'}`}>
+      {isError ? <X size={14} strokeWidth={4} className="text-white" /> : <Check size={14} strokeWidth={4} />}
     </div>
-    <span className="text-sm font-bold whitespace-nowrap tracking-wide">{message}</span>
+    <span className="text-sm font-bold whitespace-nowrap tracking-wide max-w-[250px] overflow-hidden text-ellipsis">{message}</span>
   </div>
 );
 
@@ -599,7 +449,7 @@ export default function App() {
   const [showFab, setShowFab] = useState(false);
 
   const [activeCategory, setActiveCategory] = useState(data.services[0].category);
-  const [toast, setToast] = useState({ visible: false, message: "" });
+  const [toast, setToast] = useState({ visible: false, message: "", isError: false });
   const [copiedPaymentId, setCopiedPaymentId] = useState(null);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const [isQrOpen, setIsQrOpen] = useState(false);
@@ -609,24 +459,18 @@ export default function App() {
 
   const [theme, setTheme] = useState(() => {
     let saved = localStorage.getItem('app-theme');
-    if (saved === 'nude' || !THEMES[saved]) saved = 'obsidian';
+    if (!THEMES[saved]) saved = 'obsidian';
     return saved;
   });
 
   const [bookingModal, setBookingModal] = useState({
     isOpen: false,
-    services: [], // Array for multiple services
+    services: [], 
     slot: null,
   });
 
   const [formState, setFormState] = useState({
-    name: "",
-    phone: "",
-    whatsapp: "",
-    sameAsPhone: true,
-    comment: "",
-    isSubmitting: false,
-    isSuccess: false
+    name: "", phone: "", whatsapp: "", sameAsPhone: true, comment: "", isSubmitting: false, isSuccess: false
   });
 
   useEffect(() => {
@@ -645,23 +489,15 @@ export default function App() {
   const t = THEMES[theme] || THEMES['obsidian'];
 
   useEffect(() => {
-    // ЖЕСТКАЯ БЛОКИРОВКА СКРОЛЛ-БАУНСА (Прыжков) И ФОНА
     const bgTopColor = t.appBg.replace('bg-[', '').replace(']', '');
     const bgBottomColor = t.footerBg.replace('bg-[', '').replace(']', '');
     
     document.documentElement.style.backgroundColor = bgTopColor;
-    // Устанавливаем body в цвет футера, чтобы при оттяжке снизу не было черной полосы
     document.body.style.backgroundColor = bgBottomColor;
-    
-    document.documentElement.style.overscrollBehavior = 'none';
-    document.body.style.overscrollBehavior = 'none';
   }, [t.appBg, t.footerBg]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Кнопка появляется чуть раньше
-      setShowFab(window.scrollY > 50);
-    };
+    const handleScroll = () => setShowFab(window.scrollY > 150);
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
@@ -674,11 +510,8 @@ export default function App() {
       try {
         const res = await fetch(GOOGLE_APPS_SCRIPT_URL);
         const fetchedData = await res.json();
-        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-          setRawDates(fetchedData);
-        } else {
-          setRawDates([]);
-        }
+        if (Array.isArray(fetchedData) && fetchedData.length > 0) setRawDates(fetchedData);
+        else setRawDates([]);
       } catch (error) {
         console.error("Ошибка загрузки:", error);
         setRawDates([]);
@@ -696,13 +529,7 @@ export default function App() {
         .filter(dayObj => dayObj.times && dayObj.times[0] !== 'отпуск')
         .map((dayObj, i) => {
           const parsed = parseSheetDate(dayObj.date, lang);
-          return {
-            id: dayObj.id || i,
-            fullDate: parsed.fullDate,
-            shortDate: parsed.shortDate,
-            label: parsed.label,
-            times: dayObj.times 
-          };
+          return { id: dayObj.id || i, fullDate: parsed.fullDate, shortDate: parsed.shortDate, label: parsed.label, times: dayObj.times };
         });
       setAvailableDates(parsedDates);
     } else {
@@ -712,15 +539,13 @@ export default function App() {
 
   useEffect(() => {
     const close = () => setOpenDropdown(null);
-    if (openDropdown) {
-      document.addEventListener('click', close);
-    }
+    if (openDropdown) document.addEventListener('click', close);
     return () => document.removeEventListener('click', close);
   }, [openDropdown]);
 
-  const showToast = useCallback((message) => {
-    setToast({ visible: true, message });
-    setTimeout(() => setToast({ visible: false, message: "" }), 3000);
+  const showToast = useCallback((message, isError = false) => {
+    setToast({ visible: true, message, isError });
+    setTimeout(() => setToast({ visible: false, message: "", isError: false }), 4000);
   }, []);
 
   const copyToClipboard = async (text, id = null) => {
@@ -744,7 +569,7 @@ export default function App() {
         document.execCommand('copy');
         onSuccess();
       } catch (err) {
-        showToast(d.copyError);
+        showToast(d.copyError, true);
       }
       document.body.removeChild(textArea);
     }
@@ -754,9 +579,7 @@ export default function App() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        setDeferredPrompt(null);
-      }
+      if (outcome === 'accepted') setDeferredPrompt(null);
     } else {
       showToast(d.installHint);
     }
@@ -779,16 +602,11 @@ export default function App() {
     const defaultService = data.services[0];
     let defaultSlot = null;
     if (availableDates.length > 0) {
-      defaultSlot = {
-        fullDate: availableDates[0].fullDate,
-        displayDate: availableDates[0].shortDate,
-        time: availableDates[0].times[0]
-      };
+      defaultSlot = { fullDate: availableDates[0].fullDate, displayDate: availableDates[0].shortDate, time: availableDates[0].times[0] };
     }
     setBookingModal({ isOpen: true, services: [defaultService], slot: defaultSlot });
     setFormState({ name: "", phone: "", whatsapp: "", sameAsPhone: true, comment: "", isSubmitting: false, isSuccess: false });
     
-    // Жесткая блокировка фона
     const scrollY = window.scrollY;
     document.body.style.position = 'fixed';
     document.body.style.top = `-${scrollY}px`;
@@ -799,7 +617,6 @@ export default function App() {
     setBookingModal({ isOpen: false, services: [], slot: null });
     setOpenDropdown(null);
     
-    // Разблокировка фона
     const scrollY = document.body.style.top;
     document.body.style.position = '';
     document.body.style.top = '';
@@ -807,45 +624,71 @@ export default function App() {
     window.scrollTo(0, parseInt(scrollY || '0') * -1);
   };
 
-  const handleBookingSubmit = (e) => {
+  const handleBookingSubmit = async (e) => {
     e.preventDefault();
     setFormState(prev => ({ ...prev, isSubmitting: true }));
+    
     const cleanPhone = `+${formState.phone.replace(/\D/g, '')}`;
     const cleanWa = formState.sameAsPhone ? cleanPhone : (formState.whatsapp ? `+${formState.whatsapp.replace(/\D/g, '')}` : '');
     const combinedServices = bookingModal.services.map(s => s.name).join(' + ');
+    
     const payload = {
       name: formState.name,
       phone: cleanPhone, 
       whatsapp: cleanWa,
       comment: formState.comment,
       service: combinedServices,
-      slot: `${bookingModal.slot.fullDate} ${bookingModal.slot.time}`,
+      slot: `${bookingModal.slot?.fullDate} ${bookingModal.slot?.time}`,
       timestamp: new Date().toISOString()
     };
 
     if (GOOGLE_APPS_SCRIPT_URL) {
-      fetch(GOOGLE_APPS_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors', 
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch(err => console.error("Ошибка фоновой отправки:", err));
-    }
+      try {
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+          method: 'POST',
+          redirect: 'follow',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8', 
+          },
+          body: JSON.stringify(payload)
+        });
 
-    setTimeout(() => {
-      setFormState(prev => ({ ...prev, isSubmitting: false, isSuccess: true }));
-      if (bookingModal.slot) {
-         setAvailableDates(prevDates => {
-            const newDates = [...prevDates];
-            const dateObj = newDates.find(day => day.fullDate === bookingModal.slot.fullDate);
-            if (dateObj) {
-               dateObj.times = dateObj.times.filter(t => t !== bookingModal.slot.time);
-            }
-            return newDates.filter(day => day.times.length > 0);
-         });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+
+        if (responseData.status === 'success') {
+          setFormState(prev => ({ ...prev, isSubmitting: false, isSuccess: true }));
+          
+          if (bookingModal.slot) {
+             setAvailableDates(prevDates => {
+                const newDates = [...prevDates];
+                const dateObj = newDates.find(day => day.fullDate === bookingModal.slot.fullDate);
+                if (dateObj) {
+                   dateObj.times = dateObj.times.filter(t => t !== bookingModal.slot.time);
+                }
+                return newDates.filter(day => day.times.length > 0);
+             });
+          }
+          
+          setTimeout(closeBooking, 3000);
+        } else if (responseData.status === 'error' && responseData.message === 'SLOT_TAKEN') {
+          throw new Error(d.slotTakenError);
+        } else {
+          throw new Error(responseData.message || 'Server error');
+        }
+      } catch (err) {
+        console.error("Ошибка отправки:", err);
+        setFormState(prev => ({ ...prev, isSubmitting: false }));
+        if (err.message === d.slotTakenError) {
+           showToast(err.message, true);
+        } else {
+           showToast(d.submitError || "Ошибка отправки", true);
+        }
       }
-      setTimeout(closeBooking, 3000);
-    }, 400);
+    }
   };
 
   const vacationDays = rawDates.filter(d => d.times && d.times[0] === 'отпуск');
@@ -867,9 +710,8 @@ export default function App() {
 
   return (
     <div className={`app-wrapper font-sans selection:bg-rose-200 antialiased flex flex-col relative transition-colors duration-300 min-h-[100dvh] w-full overflow-x-hidden ${t.appBg} ${t.appTextMain}`}>
-      <Toast message={toast.message} isVisible={toast.visible} />
+      <Toast message={toast.message} isVisible={toast.visible} isError={toast.isError} />
 
-      {/* Language Switcher */}
       <div 
         className={`absolute z-[80] flex items-center p-1 rounded-full backdrop-blur-md shadow-sm transition-colors duration-300 ${t.pillBg}`}
         style={{ top: 'calc(1rem + env(safe-area-inset-top))', right: '1.25rem' }}
@@ -879,7 +721,6 @@ export default function App() {
         <button onClick={() => setLang('en')} className={`px-3 py-1.5 text-[10px] sm:text-xs font-bold rounded-full transition-all duration-300 ${lang === 'en' ? t.tabActive : 'text-current opacity-60 hover:opacity-100 bg-transparent'}`}>ENG</button>
       </div>
 
-      {/* Header */}
       <header className={`relative pt-20 pb-8 px-5 overflow-hidden flex flex-col items-center text-center rounded-b-[2.5rem] shadow-[0_4px_40px_-15px_rgba(0,0,0,0.05)] w-full transition-colors duration-300 ${t.headerBg}`}>
         <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-48 rounded-[100%] blur-3xl -z-10 transition-colors duration-700 ${t.glow}`} />
         
@@ -898,7 +739,6 @@ export default function App() {
         <p className={`font-medium mb-4 transition-colors duration-300 ${t.appTextSub}`}>{data.master.specialization}</p>
 
         <div className="flex flex-wrap justify-center gap-2 mb-6">
-          {/* Интерактивная ссылка на карту */}
           <a href={data.master.mapUrl} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-full backdrop-blur-sm transition-all duration-300 active:scale-95 shadow-md border hover:scale-105 ${t.badgeBg} ${t.badgeText} border-current/20`}>
             <MapPin size={16} />
             {data.master.location}
@@ -915,10 +755,8 @@ export default function App() {
         </button>
       </header>
 
-      {/* Main Content */}
       <main className="px-5 mt-8 w-full max-w-md mx-auto space-y-10 flex-1 relative z-10">
         
-        {/* Информационный блок: Свободные окна */}
         <section>
           <SectionTitle title={d.availableSlots} icon={Sparkles} t={t} />
           {isLoadingDates ? (
@@ -963,7 +801,6 @@ export default function App() {
           )}
         </section>
 
-        {/* Прайс-лист (Без кнопок) */}
         <section>
           <SectionTitle title={d.priceList} icon={Star} t={t} />
           <div className="flex gap-2 overflow-x-auto pt-3 pb-4 -mx-5 px-5 scrollbar-hide">
@@ -998,7 +835,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Реквизиты (Полностью кликабельная строка) */}
         <section>
           <SectionTitle title={d.paymentDetails} icon={CreditCard} t={t} />
           <div className={`rounded-3xl p-2 border flex flex-col gap-1 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} ${t.cardShadow}`}>
@@ -1029,7 +865,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Правила приема */}
         <section>
           <SectionTitle title={d.rules} icon={ShieldAlert} t={t} />
           <div className={`rounded-3xl p-5 border transition-colors duration-300 ${t.policyBg} ${t.cardBorder}`}>
@@ -1044,7 +879,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Отзывы */}
         <section>
           <SectionTitle title={d.leaveReview} icon={Star} t={t} />
           <div className={`rounded-3xl p-2 border flex gap-2 transition-colors duration-300 ${t.cardBg} ${t.cardBorder} ${t.cardShadow}`}>
@@ -1062,8 +896,7 @@ export default function App() {
 
       </main>
 
-      {/* Footer */}
-      <footer className={`mt-12 border-t pt-10 pb-28 px-5 flex flex-col items-center w-full transition-colors duration-300 relative z-10 ${t.footerBg} ${t.footerBorder}`}>
+      <footer className={`mt-12 pt-10 pb-36 px-5 flex flex-col items-center w-full transition-colors duration-300 relative z-10 ${t.footerBg}`}>
         <div className="w-full max-w-xs space-y-3 mb-8">
           <button onClick={() => setIsQrOpen(true)} className={`w-full py-3.5 rounded-2xl font-semibold flex items-center justify-center gap-3 transition-all duration-300 active:scale-95 ${t.btnSecondary}`}>
             <QrCode size={18} />
@@ -1092,24 +925,22 @@ export default function App() {
             <Phone size={22} />
           </a>
         </div>
+        
         <p className={`text-xs font-medium transition-colors duration-300 ${t.appTextSub}`}>© {new Date().getFullYear()} {data.master.name}. {d.rights}</p>
         
-        {/* Author Signature */}
         <a 
           href="https://appseapro.com/" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className={`mt-4 text-[11px] font-medium opacity-15 hover:opacity-100 transition-opacity duration-300 ${t.appTextMain}`}
+          className={`text-[10px] mt-8 font-medium opacity-30 hover:opacity-100 transition-opacity duration-300 ${t.appTextMain}`}
         >
           Design by Elena Sotnikova
         </a>
       </footer>
 
-      {/* Плавающая кнопка (FAB) и кнопка смены темы */}
       <div className={`fixed bottom-6 left-0 right-0 z-[90] flex justify-center pointer-events-none transition-all duration-500 ease-out ${!bookingModal.isOpen && !isQrOpen ? 'opacity-100' : 'opacity-0'}`}>
         <div className="w-full max-w-md px-5 flex items-end justify-between gap-4">
           
-          {/* Кнопка записи (появляется при скролле) */}
           <div className={`flex-1 transition-all duration-500 ease-out ${showFab ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-12 opacity-0 pointer-events-none'}`}>
             <button onClick={openBooking} className={`w-full py-4 rounded-2xl font-bold text-lg shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 ${t.btnPrimary}`}>
               <Calendar size={20} />
@@ -1117,7 +948,6 @@ export default function App() {
             </button>
           </div>
 
-          {/* Смена тем */}
           <div className="flex flex-col items-end gap-3 pointer-events-auto shrink-0">
             <div className={`flex flex-col gap-2 transition-all duration-300 origin-bottom ${isThemeMenuOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}>
               {THEME_OPTIONS.map(opt => (
@@ -1137,7 +967,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Модалка QR */}
       {isQrOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setIsQrOpen(false)} />
@@ -1153,7 +982,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Модалка Оформления записи */}
+      {}
       {bookingModal.isOpen && (
         <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 h-[100dvh]">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={closeBooking} />
@@ -1177,7 +1006,6 @@ export default function App() {
                 <h2 className={`text-2xl font-bold mb-6 transition-colors duration-300 ${t.cardTextMain}`}>{d.bookingTitle}</h2>
                 <div className={`rounded-2xl p-4 mb-6 border transition-colors duration-300 flex flex-col gap-4 ${t.inputBg} ${t.cardBorder}`}>
                   
-                  {/* Выбор услуги */}
                   <div className={`relative border-b pb-4 ${t.cardBorder}`}>
                     <span className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${t.cardTextSub}`}>{d.service}</span>
                     <div onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'service' ? null : 'service'); }} className={`flex justify-between items-center w-full p-3.5 rounded-xl border cursor-pointer transition-all bg-white/50 backdrop-blur-sm shadow-sm ${t.inputBorder} ${openDropdown === 'service' ? 'ring-2 ' + t.inputFocusRing : ''}`}>
@@ -1196,7 +1024,7 @@ export default function App() {
                                     if (prev.services.length === 1) return prev;
                                     return { ...prev, services: prev.services.filter(item => item.id !== s.id) };
                                   } else {
-                                    if (prev.services.length >= 2) { showToast(d.maxServices); return prev; }
+                                    if (prev.services.length >= 2) { showToast(d.maxServices, true); return prev; }
                                     return { ...prev, services: [...prev.services, s] };
                                   }
                                 });
@@ -1215,7 +1043,6 @@ export default function App() {
                     )}
                   </div>
 
-                  {/* Выбор времени */}
                   <div className="relative">
                     <span className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${t.cardTextSub}`}>{d.time}</span>
                     <div onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === 'time' ? null : 'time'); }} className={`flex justify-between items-center w-full p-3.5 rounded-xl border cursor-pointer transition-all bg-white/50 backdrop-blur-sm shadow-sm ${t.inputBorder} ${openDropdown === 'time' ? 'ring-2 ' + t.inputFocusRing : ''}`}>
@@ -1281,7 +1108,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <button type="submit" disabled={formState.isSubmitting} className={`w-full mt-2 py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:active:scale-100 ${t.btnPrimary}`}>
+                  <button type="submit" disabled={formState.isSubmitting || !bookingModal.slot} className={`w-full mt-2 py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:active:scale-100 ${t.btnPrimary}`}>
                     {formState.isSubmitting ? (
                       <span className="flex items-center gap-2">
                         <span className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -1299,7 +1126,6 @@ export default function App() {
         </div>
       )}
 
-      {/* Global CSS Logic for styling that can't be done via Tailwind safely */}
       <style dangerouslySetInnerHTML={{__html: `
         html, body {
           margin: 0;
@@ -1307,6 +1133,7 @@ export default function App() {
           width: 100%;
           -webkit-tap-highlight-color: transparent;
           transition: background-color 0.3s ease;
+          overscroll-behavior: none !important;
         }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
